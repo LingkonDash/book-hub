@@ -15,7 +15,10 @@ export default function RootLayout({ children }) {
       className={`h-full ${poppins.className}`}
     >
       <body className="min-h-full flex flex-col bg-background text-foreground">
-        <Navbar />
+
+        <header className="bg-background/80 h-25 ">
+          <Navbar />
+        </header>
 
         <main className="flex-1">
           {children}

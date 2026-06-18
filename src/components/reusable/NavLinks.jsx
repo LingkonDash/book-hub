@@ -15,8 +15,8 @@ const NavLinks = ({ href, children }) => {
       className={clsx(
         'relative px-4 py-2 rounded-xl text-sm font-medium transition-all duration-300',
         isActive
-          ? 'bg-blue-50 text-blue-600'
-          : 'text-slate-600 hover:text-blue-600 hover:bg-slate-50'
+          ? 'bg-blue-100/80 text-blue-800'
+          : 'text-slate-700/90 hover:bg-blue-50'
       )}
     >
       <span className="relative z-10">{children}</span>

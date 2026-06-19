@@ -1,5 +1,6 @@
 "use client";
 
+import { handleGoogleLogin } from "@/utils/actions/formActions";
 // import { createAuthClient } from "better-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -26,6 +27,7 @@ export default function Register() {
   const [success, setSuccess] = useState(false);
 
   const googleButton = async () => {
+    handleGoogleLogin();
     // await authClient.signIn.social({
     //   provider: "google",
     //   rememberMe: false,

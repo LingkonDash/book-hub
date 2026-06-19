@@ -1,6 +1,18 @@
-import Navbar from "@/components/shared/Navbar";
-import { poppins } from "./fonts";
+import { Raleway } from "next/font/google";
 import "./globals.css";
+
+export const raleWay = Raleway({
+  subsets: ["latin"],
+  weight: [
+    "300",
+    "400",
+    "500",
+    "600",
+    "700",
+    "800",
+  ],
+  display: "swap",
+});
 
 export const metadata = {
   title: "BookHub",
@@ -12,18 +24,9 @@ export default function RootLayout({ children }) {
     <html
       lang="en"
       data-theme="light"
-      className={`h-full ${poppins.className}`}
+      className={`h-full ${raleWay.className}`}
     >
-      <body className="min-h-full flex flex-col bg-background text-foreground">
-
-        <header className="bg-background/80 h-25 ">
-          <Navbar />
-        </header>
-
-        <main className="flex-1">
-          {children}
-        </main>
-      </body>
+      <body className="min-h-full flex flex-col bg-background text-foreground"> {children} </body>
     </html>
   );
 }

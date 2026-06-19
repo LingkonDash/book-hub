@@ -56,3 +56,11 @@ export const onSignupSubmit = async (e) => {
   //   router.refresh()
   // }, 700);
 };
+
+// google login
+export const handleGoogleLogin = async () => {
+  await authClient.signIn.social({
+    provider: "google",
+    callbackURL: process.env.NEXT_PUBLIC_BASE_URL,
+  });
+};

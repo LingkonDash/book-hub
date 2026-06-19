@@ -2,25 +2,5 @@
 @import "@heroui/styles"; 
 
 @theme {
-  /* Brand Colors */
-  --color-primary: #2563EB;        /* Main CTA, buttons */
-  --color-secondary: #60A5FA;      /* Hover states, accents */
-
-  /* Background System */
-  --color-background: #0000ff08;     /* Main page background */
-  --color-surface: #FFFFFF;        /* Cards, navbar, modals */
-  --color-surface-soft: #F1F5F9;   /* Alternate sections */
-
-  /* Text Colors */
-  --color-foreground: #0F172A;     /* Headings */
-  --color-muted: #475569;          /* Paragraphs */
-
-  /* Supporting Colors */
-  --color-primary-light: #DBEAFE;  /* Active nav, badges */
-  --color-border: #E2E8F0;         /* Borders */
-
-  /* Status Colors */
-  --color-success: #16A34A;
-  --color-warning: #F59E0B;
-  --color-danger: #DC2626;
+  --color-primary: #f65d4e;
 }

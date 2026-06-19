@@ -2,7 +2,7 @@ import { Card } from '@heroui/react';
 import React from 'react';
 import { ImBook } from 'react-icons/im'; // Elegant book icon
 import { HiArrowLeft } from 'react-icons/hi';
-import LoginForm from '@/components/auth/LoginForm';
+import LoginForm from '@/components/login&registration/LoginForm';
 
 const LoginPage = () => {
   return (

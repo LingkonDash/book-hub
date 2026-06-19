@@ -1,10 +1,16 @@
+'use server'
+
 import Navbar from "@/components/shared/Navbar";
+import getSession from "@/utils/actions/server/getSession";
 
 
-export default function RootLayout({children}) {
+export default async function RootLayout({children}) {
+
+  const session = await getSession();
+
   return (
     <>
-    <Navbar />
+    <Navbar session={session}/>
       {children}  
     </>
   );

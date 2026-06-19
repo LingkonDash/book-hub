@@ -6,9 +6,9 @@ import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { BiBookOpen } from 'react-icons/bi';
 import { FiUser, FiChevronDown, FiMenu, FiX, FiGrid, FiLogOut, FiLayers, FiBookOpen as FiBook, FiSearch, FiMail, FiMapPin, FiMessageSquare, FiPhoneCall } from 'react-icons/fi';
-import { authClient } from '@/lib/auth-client';
+import Image from 'next/image';
 
-export default function Navbar() {
+export default function Navbar({ session }) {
   const pathname = usePathname();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
@@ -18,12 +18,11 @@ export default function Navbar() {
   const [isVisible, setIsVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
 
-  const { data: session } = authClient.getSession();
 
   // Adjusted paths for proper active routing state checks
   const navItems = [
     { name: 'Home', hasDropdown: false, path: '/' },
-    { name: 'Browse Books', hasDropdown: true, path: '/browse-books' },
+    { name: 'Browse Books', hasDropdown: true, path: '/browse' },
     { name: 'About us', hasDropdown: true, path: '/about' },
     { name: 'Contact', hasDropdown: true, path: '/contact' },
   ];
@@ -87,7 +86,7 @@ export default function Navbar() {
           </Link>
 
           {/* 2. Desktop Navigation Menu */}
-          <ul className="hidden lg:flex items-center gap-8 font-medium text-[15px]">
+          <ul className="hidden lg:flex items-center gap-12 font-medium text-[15px]">
             {navItems.map((item, index) => {
               const isActive = pathname === item.path;
               return (
@@ -103,9 +102,9 @@ export default function Navbar() {
                       }`}
                   >
                     <span>{item.name}</span>
-                    {/* {item.hasDropdown && (
-                      <FiChevronDown className={`text-sm transition-transform duration-200 ${activeDropdown === index ? 'rotate-180' : ''}`} />
-                    )} */}
+                    {item.hasDropdown && (
+                      <FiChevronDown className={`text-sm transition-transform absolute bottom-1/2 -right-5 duration-200 ${activeDropdown === index ? 'rotate-180' : ''}`} />
+                    )}
 
                     {/* Active Route indicator dot dropping from behind text to underneath */}
                     {isActive && (
@@ -133,7 +132,7 @@ export default function Navbar() {
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: 15 }}
                         transition={{ duration: 0.2, ease: "easeOut" }}
-                        className={`absolute left-0 mt-2 bg-white text-slate-800 rounded-2xl shadow-2xl border border-slate-100 p-4 z-50 ${item.name === 'Browse Books' ? 'w-[480px]' : item.name === 'Contact' ? 'w-[360px]' : 'w-48'
+                        className={`absolute left-1/2 -translate-x-1/2 mt-2 bg-white text-slate-800 rounded-2xl shadow-2xl border border-slate-100 p-4 z-50 ${item.name === 'Browse Books' ? 'w-[480px]' : item.name === 'Contact' ? 'w-[360px]' : 'w-48'
                           }`}
                       >
                         {/* BROWSE BOOKS CUSTOM POPUP ACCORDING TO USER REQUIREMENT */}
@@ -232,8 +231,18 @@ export default function Navbar() {
                     className="flex items-center gap-1.5 focus:outline-none p-1 rounded-lg hover:bg-white/10 transition-colors"
                     aria-label="User Menu"
                   >
-                    <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center border border-white/30">
-                      <FiUser className="text-xl" />
+                    <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center border border-white/30 overflow-hidden">
+                      {session?.user?.image ? (
+                        <Image
+                          src={session.user.image}
+                          alt={session.user.name || "Profile"}
+                          className="w-full h-full object-cover"
+                          height={40}
+                          width={40}
+                        />
+                      ) : (
+                        <FiUser className="text-xl" />
+                      )}
                     </div>
                     <FiChevronDown className={`text-sm transition-transform duration-200 ${isProfileOpen ? 'rotate-180' : ''}`} />
                   </button>

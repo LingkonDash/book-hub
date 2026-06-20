@@ -15,7 +15,7 @@ export default function BookCard({ book, index }) {
       className="group h-full flex flex-col rounded-2xl border border-zinc-200 bg-white overflow-hidden shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300"
     >
       {/* Cover Image */}
-      <div  className="relative w-full overflow-hidden aspect-[3/3.4] sm:aspect-3/4">
+      <div  className="relative w-full overflow-hidden aspect-[3/3.2]">
         <img
           src={book.coverImage}
           alt={book.title}

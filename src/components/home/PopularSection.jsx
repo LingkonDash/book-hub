@@ -23,9 +23,9 @@ const StarRating = ({ rating }) => {
 
           className={`text-[11px] ${star <= Math.round(rating)
 
-              ? 'text-amber-400'
+            ? 'text-amber-400'
 
-              : 'text-slate-200 dark:text-slate-700'
+            : 'text-slate-200 dark:text-slate-700'
 
             }`}
 
@@ -159,9 +159,10 @@ const PopularSection = async () => {
 
   return (
 
-    <section className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <section className="relative w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div className="absolute inset-x-0 top-0 h-48 bg-[#fad4de]/20 blur-3xl pointer-events-none -z-10" />
 
-      <div className="flex flex-col lg:flex-row gap-6">
+      <div className="flex flex-col lg:flex-row gap-6 bg-white rounded-[28px] border border-[#fad4de]/50 shadow-sm p-4 sm:p-6">
 
 
 
@@ -169,15 +170,15 @@ const PopularSection = async () => {
 
         <aside className="w-full lg:w-[260px] flex-shrink-0">
 
-          <div className="bg-[#fff8f5] dark:bg-slate-900 rounded-2xl p-5 border border-[#fad4de]/40 dark:border-slate-800">
+          <div className="bg-gradient-to-b from-[#fffaf9] to-white rounded-3xl p-5 border border-[#fad4de]/60 shadow-sm">
 
-            <h2 className="text-base font-extrabold text-slate-900 dark:text-white mb-4 tracking-tight">
+            <h2 className="text-base font-bold text-slate-800 mb-4 tracking-tight">
 
               Popular Authors
 
             </h2>
 
-            <div className="h-px bg-slate-200 dark:bg-slate-700 mb-4" />
+            <div className="h-px bg-[#fad4de]/60 mb-4" />
 
 
 
@@ -187,7 +188,7 @@ const PopularSection = async () => {
 
                 <li key={author.id}>
 
-                  <button className="w-full flex items-center gap-3 px-2 py-2.5 rounded-xl hover:bg-white dark:hover:bg-slate-800 transition-colors duration-150 group text-left">
+                  <button className="w-full flex items-center gap-3 px-3 py-3 rounded-2xl hover:bg-[#fff7f8] transition-all duration-200 group text-left">
 
                     <img
 
@@ -195,7 +196,7 @@ const PopularSection = async () => {
 
                       alt={author.name}
 
-                      className="w-10 h-10 rounded-full object-cover flex-shrink-0 ring-2 ring-[#fad4de]/50"
+                      className="w-10 h-10 rounded-full object-cover flex-shrink-0 ring-2 ring-[#fad4de]"
 
                     />
 
@@ -235,7 +236,7 @@ const PopularSection = async () => {
 
           <div className="flex items-center justify-between mb-5">
 
-            <h2 className="text-2xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+            <h2 className="text-2xl font-extrabold text-slate-800 tracking-tight">
 
               Keep Reading
 
@@ -245,7 +246,7 @@ const PopularSection = async () => {
 
               href="/browse"
 
-              className="flex items-center gap-1.5 text-sm font-bold text-white bg-[#fc4a32] hover:bg-[#e03d27] px-4 py-2 rounded-full transition-colors duration-200"
+              className="flex items-center gap-2 px-4 py-2 rounded-full bg-[#fc4a32] text-white text-sm font-semibold shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-200"
 
             >
 

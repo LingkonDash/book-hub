@@ -26,7 +26,7 @@ export default function RootLayout({ children }) {
       data-theme="light"
       className={`h-full ${raleWay.className}`}
     >
-      <body className="min-h-full flex flex-col bg-background text-foreground"> {children} </body>
+      <body className="min-h-full flex flex-col bg-secondary/20 text-foreground"> {children} </body>
     </html>
   );
 }

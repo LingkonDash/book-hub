@@ -81,7 +81,7 @@ export default function LoginPage() {
                 <input
                   type="email"
                   placeholder="name@example.com"
-                  className="w-full mt-2 border border-[#fc4a32] rounded-xl px-5 py-4 outline-none focus:border-black focus:ring-2 focus:ring-[#fad4de] transition bg-white text-black"
+                  className="w-full mt-2 border border-gray-300 rounded-xl px-5 py-4 outline-none focus:border-[#fc4a32] focus:ring-2 focus:ring-[#fad4de] transition bg-white text-black"
                 />
               </div>
 
@@ -100,7 +100,8 @@ export default function LoginPage() {
                 <input
                   type="password"
                   placeholder="Enter your password"
-                  className="w-full mt-2 border border-[#fc4a32] rounded-xl px-5 py-4 outline-none focus:border-black focus:ring-2 focus:ring-[#fad4de] transition bg-white text-black"
+                  className="w-full mt-2 border border-gray-300 rounded-xl px-5 py-4 outline-none focus:border-[#fc4a32] focus:ring-2 focus:ring-[#fad4de] transition bg-white text-black"
+
                 />
               </div>
 
@@ -128,14 +129,14 @@ export default function LoginPage() {
               <div className="flex-1 h-px bg-gray-200"></div>
             </div>
 
-              <div className="grid grid-cols-1 gap-4">
-                <button className="border-primary border rounded-xl hover:bg-secondary py-4 px-5 flex items-center justify-center gap-3 text-primary hover:text-black  transition duration-300 cursor-pointer">
-                  <BsGoogle size={20} />
-                  <span className="font-medium">
-                    Sign up with Google
-                  </span>
-                </button>
-              </div>
+            <div className="grid grid-cols-1 gap-4">
+              <button className="border-primary border rounded-xl hover:bg-secondary py-4 px-5 flex items-center justify-center gap-3 text-primary hover:text-black  transition duration-300 cursor-pointer">
+                <BsGoogle size={20} />
+                <span className="font-medium">
+                  Sign up with Google
+                </span>
+              </button>
+            </div>
 
             <p className="mt-8 text-center text-gray-500">
               Don’t have an account yet?{" "}

@@ -160,7 +160,7 @@ const PopularSection = async () => {
   return (
 
     <section className="relative w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      <div className="absolute inset-x-0 top-0 h-48 bg-[#fad4de]/20 blur-3xl pointer-events-none -z-10" />
+      <div className="absolute inset-x-0 top-0 h-48 bg-secondary/20 blur-3xl pointer-events-none -z-10" />
 
       <div className="flex flex-col lg:flex-row gap-6 bg-white rounded-[28px] border border-[#fad4de]/50 shadow-sm p-4 sm:p-6">
 

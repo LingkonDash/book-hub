@@ -175,14 +175,14 @@ export default function Navbar({ session }) {
                         {item.name === 'Contact' && (
                           <div className="space-y-2">
                             <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Get In Touch</p>
-                            <Link href="/contact/support" className="flex items-start gap-3 p-2 rounded-xl hover:bg-slate-50 text-slate-700 transition-colors">
+                            <Link href="/contact" className="flex items-start gap-3 p-2 rounded-xl hover:bg-slate-50 text-slate-700 transition-colors">
                               <FiMessageSquare className="text-xl text-primary mt-0.5" />
                               <div>
                                 <span className="block text-sm font-bold">Help Desk Tickets</span>
                                 <span className="block text-xs text-slate-400">Open a support thread for tracking</span>
                               </div>
                             </Link>
-                            <Link href="/contact/locations" className="flex items-start gap-3 p-2 rounded-xl hover:bg-slate-50 text-slate-700 transition-colors">
+                            <Link href="/contact" className="flex items-start gap-3 p-2 rounded-xl hover:bg-slate-50 text-slate-700 transition-colors">
                               <FiMapPin className="text-xl text-primary mt-0.5" />
                               <div>
                                 <span className="block text-sm font-bold">Library Network Hubs</span>
@@ -231,7 +231,7 @@ export default function Navbar({ session }) {
                     className="flex items-center gap-1.5 focus:outline-none p-1 rounded-lg hover:bg-white/10 transition-colors"
                     aria-label="User Menu"
                   >
-                    <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center border border-white/30 overflow-hidden">
+                    <div className="w-11 h-11 rounded-full bg-white/20 flex items-center justify-center border border-white/30 overflow-hidden">
                       {session?.user?.image ? (
                         <Image
                           src={session.user.image}

@@ -38,9 +38,13 @@ export default function Navbar({ session }) {
   };
 
   const handleLogout = async () => {
-    await authClient.signOut();
-    toast.success('Signout Successful! redirecting to login page..')
-    router.push('/login');
+    const data = await authClient.signOut();
+    if (!data?.success) {
+      toast.success('Signout Successful!')
+      router.push('/login');
+    } else {
+      toast.success('Something went wrong, try again')
+    }
   };
 
   // --- Scroll + Mouse Upward Event Listeners ---

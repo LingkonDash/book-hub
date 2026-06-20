@@ -9,9 +9,7 @@ import { FiUploadCloud, FiX, FiCheck, FiUser, FiBookOpen, FiEye, FiEyeOff } from
 import { authClient } from "@/lib/auth-client";
 import uploadToImgBB from "@/utils/imgbb/uploadToImgBB";
 import { toast } from "react-toastify";
-
-// ─── CONFIG ────────────────────────────────────────────────────────────────
-const DEFAULT_PASSWORD = "Abc@1234";
+import { register } from "next/dist/next-devtools/userspace/pages/pages-dev-overlay-setup";
 
 // ─── HELPERS ───────────────────────────────────────────────────────────────
 function validatePassword(pw) {
@@ -26,8 +24,10 @@ export default function RegisterPage() {
   // --- Form state ---
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState(DEFAULT_PASSWORD);
+  const [password, setPassword] = useState("Abc@1234");
+  const [confirmPassword, setConfirmPassword] = useState("Abc@1234");
   const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [role, setRole] = useState("user");
   const [agreed, setAgreed] = useState(false);
 
@@ -76,6 +76,8 @@ export default function RegisterPage() {
     else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) errs.email = "Enter a valid email.";
     const pwErr = validatePassword(password);
     if (pwErr) errs.password = pwErr;
+    if (!confirmPassword) errs.confirmPassword = "Please confirm your password.";
+    else if (confirmPassword !== password) errs.confirmPassword = "Passwords do not match.";
     if (!agreed) errs.agreed = "You must accept the Terms & Privacy Policy.";
     // image is optional — no hard error
     return errs;
@@ -121,8 +123,8 @@ export default function RegisterPage() {
         name: fullName.trim(),
         email: email.trim(),
         password,
+        role,
         image: imageUrl || "",
-        additionalFields: { role },
       });
 
       if (error) {
@@ -135,12 +137,9 @@ export default function RegisterPage() {
       toast.success("Account created! Redirecting you to your dashboard…");
       setSuccessMsg("Account created! Redirecting…");
 
-      const destination =
-        role === "librarian" ? "/dashboard/librarian" : "/dashboard/user";
-
       // Small delay so the success toast is visible before navigation
       setTimeout(() => {
-        router.push(destination);
+        router.push('/');
       }, 1500);
 
     } catch (err) {
@@ -285,6 +284,43 @@ export default function RegisterPage() {
 
                 {errors.password && <p className="mt-1 text-xs text-red-500">{errors.password}</p>}
                 <p className="mt-1 text-xs text-gray-400">Min. 8 characters with at least one uppercase letter.</p>
+              </div>
+
+              {/* ── Confirm Password ── */}
+              <div>
+                <label className="text-sm font-semibold text-black">Confirm Password</label>
+                <div className="relative mt-2">
+                  <input
+                    type={showConfirmPassword ? "text" : "password"}
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    placeholder="Re-enter your password"
+                    className={`w-full border rounded-xl px-5 py-4 pr-12 outline-none focus:ring-2 transition bg-white text-black
+                      ${errors.confirmPassword
+                        ? "border-red-400 focus:border-red-400 focus:ring-red-100"
+                        : confirmPassword && confirmPassword === password
+                          ? "border-green-400 focus:border-green-400 focus:ring-green-100"
+                          : "border-gray-300 focus:border-[#fc4a32] focus:ring-[#fad4de]"
+                      }`}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowConfirmPassword((v) => !v)}
+                    className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition"
+                    tabIndex={-1}
+                    aria-label={showConfirmPassword ? "Hide password" : "Show password"}
+                  >
+                    {showConfirmPassword ? <FiEyeOff size={18} /> : <FiEye size={18} />}
+                  </button>
+                </div>
+                {errors.confirmPassword && (
+                  <p className="mt-1 text-xs text-red-500">{errors.confirmPassword}</p>
+                )}
+                {!errors.confirmPassword && confirmPassword && confirmPassword === password && (
+                  <p className="mt-1 text-xs text-green-500 flex items-center gap-1">
+                    <FiCheck size={11} /> Passwords match
+                  </p>
+                )}
               </div>
 
               {/* ── Role Select ─────────────────────────────────────────────── */}

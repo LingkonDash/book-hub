@@ -132,7 +132,7 @@ export default function Navbar({ session }) {
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: 15 }}
                         transition={{ duration: 0.2, ease: "easeOut" }}
-                        className={`absolute left-1/2 -translate-x-1/2 mt-2 bg-white text-slate-800 rounded-2xl shadow-2xl border border-slate-100 p-4 z-50 ${item.name === 'Browse Books' ? 'w-[480px]' : item.name === 'Contact' ? 'w-[360px]' : 'w-48'
+                        className={`absolute left-1/2 -translate-x-1/2 mt-2 bg-white text-slate-800 rounded-2xl shadow-2xl border border-slate-100 p-4 z-50 ${item.name === 'Browse Books' ? 'w-120' : item.name === 'Contact' ? 'w-90' : 'w-48'
                           }`}
                       >
                         {/* BROWSE BOOKS CUSTOM POPUP ACCORDING TO USER REQUIREMENT */}

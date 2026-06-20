@@ -28,7 +28,7 @@ export default function HeroImageWithRings() {
 
       {/* Inner Glowing Ring */}
       <motion.div
-        className="absolute rounded-full border border-primary/40 bg-gradient-to-r from-primary/5 to-secondary/5 blur-sm pointer-events-none"
+        className="absolute rounded-full border border-primary/40 bg-linear-to-r from-primary/5 to-secondary/5 blur-sm pointer-events-none"
         style={{ width: "90%", height: "90%", maxWidth: "450px", maxHeight: "450px" }}
         animate={{ scale: [1, 1.04, 1] }}
         transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
@@ -42,7 +42,7 @@ export default function HeroImageWithRings() {
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.8, ease: "easeOut" }}
-        className="relative z-10 w-full max-w-[380px] aspect-[4/5] rounded-3xl p-3 bg-white/10 dark:bg-black/20 backdrop-blur-md border border-white/20 shadow-2xl"
+        className="relative z-10 w-full max-w-95 aspect-4/5 rounded-3xl p-3 bg-white/10 dark:bg-black/20 backdrop-blur-md border border-white/20 shadow-2xl"
       >
         <div className="relative w-full h-full rounded-2xl overflow-hidden bg-slate-900">
           <Image

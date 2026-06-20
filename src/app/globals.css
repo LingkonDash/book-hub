@@ -2,5 +2,10 @@
 @import "@heroui/styles"; 
 
 @theme {
-  --color-primary: #f22253;
+  --color-primary: #fc4a32;
+  --color-secondary: #fad4de;
+}
+
+html, body {
+  overflow-x: hidden;
 }

@@ -88,8 +88,7 @@ export default function Banner() {
             initial={{ opacity: 0, y: -15 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            style={{ backgroundColor: 'rgba(242, 34, 83, 0.1)', color: '#f22253' }}
-            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-sm font-semibold border border-primary/20 tracking-wide"
+            className="text-primary bg-primary/10 inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-sm font-semibold border border-primary/20 tracking-wide"
           >
             <FiTruck className="text-base" />
             <span>Doorstep Book Deliveries Across the Network</span>
@@ -103,7 +102,7 @@ export default function Banner() {
             className="text-4xl sm:text-5xl md:text-[55px] font-extrabold tracking-tight leading-[1.15] max-w-2xl text-slate-900"
           >
             Your Local Library, <br />
-            <span style={{ color: '#f22253' }}>
+            <span className='text-primary'>
               Delivered Straight to You.
             </span>
           </motion.h1>
@@ -127,8 +126,7 @@ export default function Banner() {
           >
             <Link
               href="/browse"
-              style={{ borderColor: '#f22253' }}
-              className="group relative overflow-hidden inline-flex items-center justify-center gap-2.5 px-8 py-4 bg-[#fad4de] hover:bg-primary/80 text-slate-900 text-base font-bold rounded-2xl shadow-md border transition-all duration-300 transform active:scale-98"
+              className="border-primary group relative overflow-hidden inline-flex items-center justify-center gap-2.5 px-8 py-4 bg-secondary hover:bg-primary/80 text-slate-900 text-base font-bold rounded-2xl shadow-md border transition-all duration-300 transform active:scale-98"
             >
               {/* Dynamic Dark Shift UI hover layer */}
               <span className="absolute inset-0 w-full h-full bg-slate-950 scale-x-0 group-hover:scale-x-100 origin-center transition-transform duration-300 ease-out -z-10" />

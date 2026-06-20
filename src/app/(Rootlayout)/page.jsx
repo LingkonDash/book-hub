@@ -4,6 +4,7 @@ import BenefitsMarquee from "@/components/home/BenefitsMarquee";
 import BestSeller from "@/components/home/BestSeller";
 import PopularSection from "@/components/home/PopularSection";
 import NewsletterSection from "@/components/home/Newsletter";
+import HowItWorks from "@/components/home/HowItWorks";
 
 
 
@@ -16,6 +17,7 @@ export default async function Home() {
       <CategoryBrowse />
       <BestSeller />
       <PopularSection />
+      <HowItWorks />
       <NewsletterSection />
     </>
   );

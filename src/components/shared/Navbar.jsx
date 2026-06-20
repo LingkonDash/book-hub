@@ -2,14 +2,18 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { BiBookOpen } from 'react-icons/bi';
 import { FiUser, FiChevronDown, FiMenu, FiX, FiGrid, FiLogOut, FiLayers, FiBookOpen as FiBook, FiSearch, FiMail, FiMapPin, FiMessageSquare, FiPhoneCall } from 'react-icons/fi';
 import Image from 'next/image';
+import { authClient } from '@/lib/auth-client';
+import { toast } from "react-toastify";
 
 export default function Navbar({ session }) {
   const pathname = usePathname();
+  const router = useRouter();
+
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState(null);
@@ -33,8 +37,10 @@ export default function Navbar({ session }) {
     return '/dashboard/user';
   };
 
-  const handleLogout = () => {
-    console.log('logout clicked');
+  const handleLogout = async () => {
+    await authClient.signOut();
+    toast.success('Signout Successful! redirecting to login page..')
+    router.push('/login');
   };
 
   // --- Scroll + Mouse Upward Event Listeners ---
@@ -294,7 +300,7 @@ export default function Navbar({ session }) {
               ) : (
                 /* Register Button (Logged Out)  */
                 <Link
-                  href="/register"
+                  href="/login"
                   className="px-5 py-2.5 bg-white text-primary text-sm font-bold rounded-xl shadow-md hover:bg-opacity-90 transition-all duration-200 hover:-translate-y-0.5 active:translate-y-0"
                 >
                   Login

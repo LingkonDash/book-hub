@@ -1,25 +1,28 @@
 "use client";
- 
+
 import { useState, useRef } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { BiBookOpen } from "react-icons/bi";
 import { BsGoogle } from "react-icons/bs";
 import { FiUploadCloud, FiX, FiCheck, FiUser, FiBookOpen, FiEye, FiEyeOff } from "react-icons/fi";
 import { authClient } from "@/lib/auth-client";
 import uploadToImgBB from "@/utils/imgbb/uploadToImgBB";
- 
+import { toast } from "react-toastify";
+
 // ─── CONFIG ────────────────────────────────────────────────────────────────
 const DEFAULT_PASSWORD = "Abc@1234";
- 
+
 // ─── HELPERS ───────────────────────────────────────────────────────────────
 function validatePassword(pw) {
   if (pw.length < 8) return "Must be at least 8 characters.";
   if (!/[A-Z]/.test(pw)) return "Must contain at least one uppercase letter.";
   return null;
 }
- 
+
 // ─── COMPONENT ─────────────────────────────────────────────────────────────
 export default function RegisterPage() {
+  const router = useRouter();
   // --- Form state ---
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
@@ -27,24 +30,24 @@ export default function RegisterPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [role, setRole] = useState("user");
   const [agreed, setAgreed] = useState(false);
- 
+
   // --- Image state ---
   const [imageFile, setImageFile] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
   const [imageUploading, setImageUploading] = useState(false);
   const fileInputRef = useRef(null);
- 
+
   // --- Error/status state ---
   const [errors, setErrors] = useState({});
   const [submitting, setSubmitting] = useState(false);
   const [successMsg, setSuccessMsg] = useState("");
   const [serverError, setServerError] = useState("");
- 
+
   // ── Image pick ──────────────────────────────────────────────────────────
   function handleImageChange(e) {
     const file = e.target.files?.[0];
     if (!file) return;
- 
+
     if (!file.type.startsWith("image/")) {
       setErrors((prev) => ({ ...prev, image: "Only image files are allowed." }));
       return;
@@ -53,18 +56,18 @@ export default function RegisterPage() {
       setErrors((prev) => ({ ...prev, image: "Image must be under 4 MB." }));
       return;
     }
- 
+
     setImageFile(file);
     setImagePreview(URL.createObjectURL(file));
     setErrors((prev) => ({ ...prev, image: null }));
   }
- 
+
   function removeImage() {
     setImageFile(null);
     setImagePreview(null);
     if (fileInputRef.current) fileInputRef.current.value = "";
   }
- 
+
   // ── Inline validation ───────────────────────────────────────────────────
   function validate() {
     const errs = {};
@@ -77,69 +80,83 @@ export default function RegisterPage() {
     // image is optional — no hard error
     return errs;
   }
- 
+
   // ── Submit ───────────────────────────────────────────────────────────────
   async function handleSubmit(e) {
     e.preventDefault();
     setServerError("");
     setSuccessMsg("");
- 
+
+    // ── Step 1: Client-side validation ──────────────────────────────────────
     const errs = validate();
     if (Object.keys(errs).length > 0) {
       setErrors(errs);
+      toast.error("Please fill up all fields correctly before continuing.");
       return;
     }
     setErrors({});
- 
+
     try {
       setSubmitting(true);
- 
-      // 1. Upload image if provided
-      let imageUrl = "";
 
+      // ── Step 2: Image upload (optional) ───────────────────────────────────
+      let imageUrl = "";
       if (imageFile) {
         setImageUploading(true);
         try {
           imageUrl = await uploadToImgBB(imageFile);
         } catch {
-          setErrors({ image: "Image upload failed. Please try again." });
+          toast.error("Photo upload failed. Please try again.", { id: uploadToast });
+          setErrors((prev) => ({ ...prev, image: "Image upload failed. Please try again." }));
           setSubmitting(false);
           setImageUploading(false);
           return;
         }
         setImageUploading(false);
       }
- 
-      // 2. Register via Better Auth
+
+      // ── Step 3: Register via Better Auth ──────────────────────────────────
+
       const { error } = await authClient.signUp.email({
         name: fullName.trim(),
         email: email.trim(),
         password,
-        image: imageUrl || undefined,
-        role, 
-        callbackURL: `/dashboard/${role || 'user'}`,
+        image: imageUrl || "",
+        additionalFields: { role },
       });
- 
+
       if (error) {
+        toast.error(error.message || "Registration failed. Please try again.");
         setServerError(error.message || "Registration failed. Please try again.");
         return;
       }
- 
+
+      // ── Step 4: Success → role-based redirect ─────────────────────────────
+      toast.success("Account created! Redirecting you to your dashboard…");
       setSuccessMsg("Account created! Redirecting…");
-      // Next.js router redirect handled by callbackURL above, but you can also:
-      router.push(`/dashboard/${role || 'user'}`);
+
+      const destination =
+        role === "librarian" ? "/dashboard/librarian" : "/dashboard/user";
+
+      // Small delay so the success toast is visible before navigation
+      setTimeout(() => {
+        router.push(destination);
+      }, 1500);
+
     } catch (err) {
+      toast.error("Something went wrong. Please try again.");
       setServerError("Something went wrong. Please try again.");
     } finally {
       setSubmitting(false);
     }
   }
- 
+
+
   // ── Google signup ────────────────────────────────────────────────────────
   async function handleGoogleSignUp() {
     await authClient.signIn.social({ provider: "google", callbackURL: "/dashboard/user" });
   }
- 
+
   // ── Password strength indicator ──────────────────────────────────────────
   const pwStrength = (() => {
     if (!password) return 0;
@@ -150,30 +167,30 @@ export default function RegisterPage() {
     if (/[^A-Za-z0-9]/.test(password)) score++;
     return score;
   })();
- 
+
   const strengthLabel = ["", "Weak", "Fair", "Good", "Strong"][pwStrength];
   const strengthColor = ["", "#ef4444", "#f97316", "#eab308", "#22c55e"][pwStrength];
- 
+
   // ─────────────────────────────────────────────────────────────────────────
   return (
     <section className="min-h-screen bg-gray-100 flex items-center justify-center px-6 py-12">
       <div className="w-full max-w-7xl bg-white rounded-[40px] overflow-hidden shadow-xl grid grid-cols-1 lg:grid-cols-2">
- 
+
         {/* ── LEFT: Form ─────────────────────────────────────────────────── */}
         <div className="p-8 md:p-14 order-2 flex items-start lg:items-center overflow-y-auto max-h-screen lg:max-h-none">
           <div className="w-full max-w-lg mx-auto py-4">
- 
+
             {/* Mobile logo */}
             <Link href="/" className="flex lg:hidden items-center gap-2 text-black mb-10">
               <BiBookOpen size={42} className="text-[#fc4a32]" />
               <h2 className="text-3xl font-bold">BookHub</h2>
             </Link>
- 
+
             <h2 className="text-4xl font-extrabold text-black tracking-tight">Create Account</h2>
             <p className="mt-3 text-gray-500 leading-7">
               Join BookHub and start exploring literary classics, academic resources, and new titles delivered straight to your door.
             </p>
- 
+
             {/* Server-level feedback */}
             {serverError && (
               <div className="mt-6 bg-red-50 border border-red-200 text-red-700 rounded-xl px-5 py-3 text-sm font-medium">
@@ -185,9 +202,9 @@ export default function RegisterPage() {
                 <FiCheck /> {successMsg}
               </div>
             )}
- 
+
             <form onSubmit={handleSubmit} noValidate className="mt-8 space-y-5">
- 
+
               {/* ── Full Name ── */}
               <div>
                 <label className="text-sm font-semibold text-black">Full Name</label>
@@ -204,7 +221,7 @@ export default function RegisterPage() {
                 />
                 {errors.fullName && <p className="mt-1 text-xs text-red-500">{errors.fullName}</p>}
               </div>
- 
+
               {/* ── Email ── */}
               <div>
                 <label className="text-sm font-semibold text-black">Email Address</label>
@@ -221,7 +238,7 @@ export default function RegisterPage() {
                 />
                 {errors.email && <p className="mt-1 text-xs text-red-500">{errors.email}</p>}
               </div>
- 
+
               {/* ── Password ── */}
               <div>
                 <label className="text-sm font-semibold text-black">Password</label>
@@ -247,7 +264,7 @@ export default function RegisterPage() {
                     {showPassword ? <FiEyeOff size={18} /> : <FiEye size={18} />}
                   </button>
                 </div>
- 
+
                 {/* Strength bar */}
                 {password && (
                   <div className="mt-2">
@@ -265,11 +282,11 @@ export default function RegisterPage() {
                     </p>
                   </div>
                 )}
- 
+
                 {errors.password && <p className="mt-1 text-xs text-red-500">{errors.password}</p>}
                 <p className="mt-1 text-xs text-gray-400">Min. 8 characters with at least one uppercase letter.</p>
               </div>
- 
+
               {/* ── Role Select ─────────────────────────────────────────────── */}
               <div>
                 <label className="text-sm font-semibold text-black">Account Role</label>
@@ -302,7 +319,7 @@ export default function RegisterPage() {
                       >
                         {role === value && <FiCheck size={10} className="text-white stroke-[3]" />}
                       </span>
- 
+
                       <div className={`w-10 h-10 rounded-xl flex items-center justify-center transition
                         ${role === value ? "bg-[#fc4a32] text-white" : "bg-gray-100 text-gray-500"}`}
                       >
@@ -316,12 +333,12 @@ export default function RegisterPage() {
                   ))}
                 </div>
               </div>
- 
+
               {/* ── Profile Image Upload ─────────────────────────────────────── */}
               <div>
                 <label className="text-sm font-semibold text-black">Profile Photo</label>
                 <p className="text-xs text-gray-400 mt-0.5">Optional — max 4 MB. JPG, PNG, or WebP.</p>
- 
+
                 {!imagePreview ? (
                   <div
                     onClick={() => fileInputRef.current?.click()}
@@ -366,7 +383,7 @@ export default function RegisterPage() {
                     </button>
                   </div>
                 )}
- 
+
                 <input
                   ref={fileInputRef}
                   type="file"
@@ -376,7 +393,7 @@ export default function RegisterPage() {
                 />
                 {errors.image && <p className="mt-1 text-xs text-red-500">{errors.image}</p>}
               </div>
- 
+
               {/* ── Terms checkbox ── */}
               <div>
                 <div className="flex items-start gap-3">
@@ -408,7 +425,7 @@ export default function RegisterPage() {
                 </div>
                 {errors.agreed && <p className="mt-1 text-xs text-red-500 pl-8">{errors.agreed}</p>}
               </div>
- 
+
               {/* ── Submit ── */}
               <button
                 type="submit"
@@ -425,14 +442,14 @@ export default function RegisterPage() {
                 )}
               </button>
             </form>
- 
+
             {/* ── Divider ── */}
             <div className="my-7 flex items-center gap-4">
               <div className="flex-1 h-px bg-gray-200" />
               <span className="text-gray-400 text-sm font-medium">OR</span>
               <div className="flex-1 h-px bg-gray-200" />
             </div>
- 
+
             {/* ── Google ── */}
             <button
               type="button"
@@ -442,7 +459,7 @@ export default function RegisterPage() {
               <BsGoogle size={20} />
               Sign up with Google
             </button>
- 
+
             <p className="mt-7 text-center text-gray-500">
               Already have an account?{" "}
               <Link href="/login" className="text-[#fc4a32] font-semibold hover:underline">
@@ -451,7 +468,7 @@ export default function RegisterPage() {
             </p>
           </div>
         </div>
- 
+
         {/* ── RIGHT: Branding ───────────────────────────────────────────────── */}
         <div className="hidden order-1 lg:flex relative bg-black p-10 md:p-14 flex-col justify-between min-h-[500px]">
           <div className="absolute inset-0 opacity-40">
@@ -461,22 +478,22 @@ export default function RegisterPage() {
               className="w-full h-full object-cover"
             />
           </div>
- 
+
           <div className="relative z-10">
             <Link href="/" className="flex items-center gap-2 text-white">
               <BiBookOpen size={48} className="text-[#fc4a32]" />
               <h2 className="text-3xl font-bold tracking-tight">BookHub</h2>
             </Link>
- 
+
             <h1 className="mt-8 text-4xl md:text-5xl font-extrabold text-white tracking-tight leading-tight">
               Discover amazing reading experiences from top inventories
             </h1>
- 
+
             <p className="mt-6 text-gray-300 leading-7 max-w-md text-base">
               Create your account and unlock personalized reading recommendations, verified local library archives, and fast home delivery options.
             </p>
           </div>
- 
+
           {/* Role preview cards */}
           <div className="relative z-10 mt-10 space-y-3">
             <div className="bg-white/10 backdrop-blur-sm border border-white/10 rounded-3xl p-5">
@@ -488,7 +505,7 @@ export default function RegisterPage() {
                 Enjoy physical books, simple item processing with secure checkout options, and a flawless decentralized catalog experience every single day.
               </p>
             </div>
- 
+
             {/* Two role hint pills */}
             <div className="flex gap-3">
               <div className="flex-1 bg-white/10 backdrop-blur-sm border border-white/10 rounded-2xl p-3 flex items-center gap-2">
@@ -512,7 +529,7 @@ export default function RegisterPage() {
             </div>
           </div>
         </div>
- 
+
       </div>
     </section>
   );

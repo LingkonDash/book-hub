@@ -1,5 +1,6 @@
 import { Raleway } from "next/font/google";
 import "./globals.css";
+import { ToastContainer } from "react-toastify";
 
 export const raleWay = Raleway({
   subsets: ["latin"],
@@ -26,7 +27,10 @@ export default function RootLayout({ children }) {
       data-theme="light"
       className={`h-full ${raleWay.className}`}
     >
-      <body className="min-h-full flex flex-col bg-secondary/20 text-foreground"> {children} </body>
+      <body className="min-h-full flex flex-col bg-secondary/20 text-foreground">
+        {children}
+        <ToastContainer />
+      </body>
     </html>
   );
 }

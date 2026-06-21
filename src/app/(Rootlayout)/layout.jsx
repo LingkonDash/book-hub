@@ -1,13 +1,14 @@
 'use server'
 
 import Navbar from "@/components/shared/Navbar";
-import getSession from "@/utils/actions/server/getSession";
 import Footer from "../../components/shared/Footer";
+import { getUserSession } from "@/lib/core/session";
 
 
 export default async function RootLayout({ children }) {
 
-  const session = await getSession();
+  const user = await getUserSession();
+  const session = {user};
 
   return (
     <>

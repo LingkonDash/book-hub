@@ -118,11 +118,13 @@ export default function RegisterPage() {
 
       // ── Step 3: Register via Better Auth ──────────────────────────────────
 
+      console.log(role);
+
       const { data, error } = await authClient.signUp.email({
         name: fullName.trim(),
         email: email.trim(),
         password,
-        role,
+        userRole: role,
         image: imageUrl || "",
       });
 

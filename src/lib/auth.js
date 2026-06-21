@@ -19,12 +19,13 @@ export const auth = betterAuth({
   },
   user: {
     additionalFields: {
-      role: {
-        default: "user",  
+      userRole: {
+        default: "user", 
+        input: true,
       },
     },
   },
-  // plugins: [
-  //    admin()
-  // ]
+  plugins: [
+     admin()
+  ]
 });

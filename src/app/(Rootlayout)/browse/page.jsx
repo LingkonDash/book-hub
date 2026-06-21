@@ -1,7 +1,7 @@
 // app/browse/page.jsx  —  Server Component
 import BooksBody from '@/components/browse/BooksBody';
 import SearchAndFiltering from '@/components/browse/SearchAndFiltering';
-import { getBooks } from '@/lib/action/server/getBooks';
+import { getBooks } from '@/lib/api/getBooks';
 import { BiBookOpen } from 'react-icons/bi';
 import { FaRegStar } from 'react-icons/fa6';
 import { HiOutlineTruck } from 'react-icons/hi2';
@@ -40,7 +40,8 @@ export default async function AllBooksPage({ searchParams }) {
   const page     = Math.max(1, parseInt(params?.page || '1', 10));
 
   // Server-side prefetch for the first render
-  const initialData = await getBooks({ q, category, sort, page, limit: LIMIT });
+  const initialData = await getBooks(`page=${page || 1}&limit=${LIMIT}&${category ? `category=${category}&` : ''}${sort ? `sort=${sort}&` : ''}${q ? `search=${q}` : ''}`);
+  console.log(initialData);
 
   // Heading copy
   const categoryLabel = category ? CATEGORY_LABELS[category] : null;

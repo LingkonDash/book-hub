@@ -5,7 +5,7 @@ import Link from 'next/link';
 
 import { FaStar, FaTruck, FaArrowRight, FaChevronRight } from 'react-icons/fa';
 
-import { getAllBooks } from '@/utils/actions/server/getAllBooks';
+import { getBooks } from '@/lib/api/getBooks';
 
 
 
@@ -53,7 +53,8 @@ const PopularSection = async () => {
 
   try {
 
-    books = await getAllBooks('');
+    const res = await getBooks('limit=5');
+    books = res.books;
 
   } catch (error) {
 
@@ -63,11 +64,7 @@ const PopularSection = async () => {
 
 
 
-  const bestSellersData = Array.isArray(books)
-
-    ? books.filter((book) => book.rating?.average >= 4.0).slice(0, 5)
-
-    : [];
+  const bestSellersData = books
 
 
 
@@ -366,9 +363,9 @@ const PopularSection = async () => {
 
                     <Link
 
-                      key={book.id}
+                      key={book._id}
 
-                      href={`/browse/${book.id}`}
+                      href={`/browse/${book._id}`}
 
                       className="flex gap-3.5 p-4 group hover:bg-slate-50 dark:hover:bg-slate-900/50 transition-colors duration-150 first:pt-0 sm:first:pt-4"
 

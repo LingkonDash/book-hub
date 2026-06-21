@@ -88,7 +88,7 @@ export default function LoginPage() {
     try {
       await authClient.signIn.social({
         provider: "google",
-        callbackURL: "/dashboard/user", // Google users default to /user; middleware can re-route
+        callbackURL: "/", 
       });
       toast.success("Redirecting…", { id: googleToast });
     } catch {

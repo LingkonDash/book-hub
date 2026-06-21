@@ -118,7 +118,7 @@ export default function RegisterPage() {
 
       // ── Step 3: Register via Better Auth ──────────────────────────────────
 
-      const { error } = await authClient.signUp.email({
+      const { data, error } = await authClient.signUp.email({
         name: fullName.trim(),
         email: email.trim(),
         password,

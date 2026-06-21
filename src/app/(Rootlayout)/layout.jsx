@@ -2,7 +2,7 @@
 
 import Navbar from "@/components/shared/Navbar";
 import getSession from "@/utils/actions/server/getSession";
-import Footer from "../../components/home/Footer";
+import Footer from "../../components/shared/Footer";
 
 
 export default async function RootLayout({ children }) {

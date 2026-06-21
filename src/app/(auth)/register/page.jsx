@@ -9,7 +9,6 @@ import { FiUploadCloud, FiX, FiCheck, FiUser, FiBookOpen, FiEye, FiEyeOff } from
 import { authClient } from "@/lib/auth-client";
 import uploadToImgBB from "@/utils/imgbb/uploadToImgBB";
 import { toast } from "react-toastify";
-import { register } from "next/dist/next-devtools/userspace/pages/pages-dev-overlay-setup";
 
 // ─── HELPERS ───────────────────────────────────────────────────────────────
 function validatePassword(pw) {
@@ -140,7 +139,7 @@ export default function RegisterPage() {
       // Small delay so the success toast is visible before navigation
       setTimeout(() => {
         router.push('/');
-      }, 1500);
+      }, 1200);
 
     } catch (err) {
       toast.error("Something went wrong. Please try again.");

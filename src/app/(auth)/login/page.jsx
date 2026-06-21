@@ -66,7 +66,7 @@ export default function LoginPage() {
       // Step 3: Role-based redirect
       const userRole = data?.user?.role || "user";
       const destination =
-        userRole === "librarian" ? "/dashboard/librarian" : "/dashboard/user";
+        userRole === "librarian" ? "/dashboard/librarian" : 'admin' ? '/dashboard/admin' : "/";
 
       toast.success(`Welcome back! Redirecting to your dashboard…`);
 

@@ -13,11 +13,11 @@ export default function Footer() {
   const quickLinks = [
     {
       title: "About",
-      href: "/about",
+      href: "#",
     },
     {
       title: "Contact",
-      href: "/contact",
+      href: "/#contact",
     },
     {
       title: "Privacy Policy",

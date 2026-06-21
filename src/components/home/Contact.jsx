@@ -209,7 +209,7 @@ export default function ContactSection() {
                   <label className="text-[12px] font-semibold text-gray-600 uppercase tracking-wide">
                     Your Name
                   </label>
-                  <input placeholder="e.g. Lingkon Das" className="w-full rounded-xl border border-[#fad4de] bg-[#fdfcfc] px-4 py-3 text-[14px] text-gray-400 cursor-default">
+                  <input placeholder="e.g. Lingkon Dash" className="w-full rounded-xl border border-[#fad4de] bg-[#fdfcfc] px-4 py-3 text-[14px] text-gray-400 cursor-default">
                     
                   </input>
                 </div>

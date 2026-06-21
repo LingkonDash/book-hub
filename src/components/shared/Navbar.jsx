@@ -27,8 +27,8 @@ export default function Navbar({ session }) {
   const navItems = [
     { name: 'Home', hasDropdown: false, path: '/' },
     { name: 'Browse Books', hasDropdown: true, path: '/browse' },
-    { name: 'About us', hasDropdown: true, path: '/about' },
-    { name: 'Contact', hasDropdown: true, path: '/contact' },
+    { name: 'About us', hasDropdown: true, path: '/#howItWorks' },
+    { name: 'Contact', hasDropdown: true, path: '/#contact' },
   ];
 
   const getDashboardPath = (role) => {
@@ -185,14 +185,14 @@ export default function Navbar({ session }) {
                         {item.name === 'Contact' && (
                           <div className="space-y-2">
                             <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Get In Touch</p>
-                            <Link href="/contact" className="flex items-start gap-3 p-2 rounded-xl hover:bg-slate-50 text-slate-700 transition-colors">
+                            <Link href="/#contact" className="flex items-start gap-3 p-2 rounded-xl hover:bg-slate-50 text-slate-700 transition-colors">
                               <FiMessageSquare className="text-xl text-primary mt-0.5" />
                               <div>
                                 <span className="block text-sm font-bold">Help Desk Tickets</span>
                                 <span className="block text-xs text-slate-400">Open a support thread for tracking</span>
                               </div>
                             </Link>
-                            <Link href="/contact" className="flex items-start gap-3 p-2 rounded-xl hover:bg-slate-50 text-slate-700 transition-colors">
+                            <Link href="/#contact" className="flex items-start gap-3 p-2 rounded-xl hover:bg-slate-50 text-slate-700 transition-colors">
                               <FiMapPin className="text-xl text-primary mt-0.5" />
                               <div>
                                 <span className="block text-sm font-bold">Library Network Hubs</span>
@@ -212,11 +212,11 @@ export default function Navbar({ session }) {
                         {/* DEFAULT BACKUP LAYOUT FALLBACK FOR OTHER CHOSEN DROPDOWNS (E.G. ABOUT US) */}
                         {item.name !== 'Browse Books' && item.name !== 'Contact' && (
                           <div className="space-y-1">
-                            <Link href="#" className="block px-4 py-2 text-sm font-semibold rounded-lg hover:bg-slate-50 text-slate-700 transition-colors">
-                              Sub Option 1
+                            <Link href="/#howItWorks" className="block px-4 py-2 text-sm font-semibold rounded-lg hover:bg-slate-50 text-slate-700 transition-colors">
+                              How it works
                             </Link>
                             <Link href="#" className="block px-4 py-2 text-sm font-semibold rounded-lg hover:bg-slate-50 text-slate-700 transition-colors">
-                              Sub Option 2
+                              About our shop
                             </Link>
                           </div>
                         )}

@@ -5,6 +5,7 @@ import BestSeller from "@/components/home/BestSeller";
 import PopularSection from "@/components/home/PopularSection";
 import NewsletterSection from "@/components/home/Newsletter";
 import HowItWorks from "@/components/home/HowItWorks";
+import ContactSection from "@/components/home/Contact";
 
 
 
@@ -18,6 +19,7 @@ export default async function Home() {
       <BestSeller />
       <PopularSection />
       <HowItWorks />
+      <ContactSection />
       <NewsletterSection />
     </>
   );

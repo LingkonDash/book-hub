@@ -25,7 +25,7 @@ const categories = [
 
 const CategoryBrowse = () => {
   return (
-    <section className="py-15 px-4 max-w-400 mx-auto">
+    <section className="py-15 px-4 max-w-380 mx-auto">
       {/* Header Layout */}
       <div className="mb-10 text-center">
         <h2 className="text-3xl font-extrabold tracking-tight text-zinc-900 dark:text-zinc-50 sm:text-4xl">

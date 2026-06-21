@@ -248,13 +248,13 @@ export default function HowItWorks() {
   const headerInView = useInView(headerRef, { once: true, margin: "-80px" });
 
   return (
-    <section className="relative py-20 px-4 sm:px-6 lg:px-8 overflow-hidden bg-[#fdfcfc]">
+    <section id="howItWorks" className="relative py-20 px-4 sm:px-6 lg:px-8 overflow-hidden bg-[#fdfcfc]">
 
       {/* Decorative blobs — purely visual, no layout impact */}
       <div className="pointer-events-none absolute -top-24 -left-24 w-64 h-64 rounded-full bg-[#fad4de]/30 blur-3xl" />
       <div className="pointer-events-none absolute -bottom-24 -right-24 w-80 h-80 rounded-full bg-[#fc4a32]/10 blur-3xl" />
 
-      <div className="relative max-w-6xl mx-auto">
+      <div className="relative max-w-380 mx-auto">
 
         {/* ── HEADER ── */}
         <motion.div

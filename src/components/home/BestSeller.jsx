@@ -234,7 +234,7 @@ export default function BestSeller() {
 
   return (
     <section className="w-full py-16 bg-secondary/20 overflow-hidden">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-380 mx-auto px-4 sm:px-6 lg:px-8">
 
         {/* Header */}
         <div className="flex flex-col sm:flex-row items-start sm:items-end justify-between mb-10 gap-4">

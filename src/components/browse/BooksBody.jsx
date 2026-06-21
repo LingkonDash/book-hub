@@ -3,6 +3,8 @@
 import { useState, useEffect, useTransition, useCallback } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import BookCard from '../shared/BookCard';
+import { toast } from 'react-toastify';
+import { getBooks } from '@/lib/api/getBooks';
 
 const LIMIT = 12;
 
@@ -79,11 +81,12 @@ export default function BooksBody({ getData, initialData }) {
         // getData is your server action — fill it in on your end.
         // It receives { q, category, sort, page, limit } and should
         // return { books: [...], totalCount: number }
-        const result = await getData({ q, category, sort, page, limit: LIMIT });
+        const result = await getBooks(`page=${page || 1}&limit=${LIMIT}&${category ? `category=${category}&` : ''}${sort ? `sort=${sort}&` : ''}${q ? `search=${q}` : ''}`);
         setBooks(result?.books ?? []);
-        setTotalCount(result?.totalCount ?? 0);
+        setTotalCount(result?.total ?? 0);
       } catch (err) {
-        console.error('Failed to fetch books:', err);
+        toast.error('Failed to fetch books:', err);
+        console.log(err);
         setBooks([]);
         setTotalCount(0);
       } finally {
@@ -95,6 +98,8 @@ export default function BooksBody({ getData, initialData }) {
   useEffect(() => {
     fetchBooks();
   }, [fetchBooks]);
+
+  console.log(books); 
 
   // ── Page navigation ──────────────────────────────────────
   const goToPage = (p) => {
@@ -169,7 +174,7 @@ export default function BooksBody({ getData, initialData }) {
       ) : (
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
           {books.map((book) => (
-            <BookCard key={book.id} book={book} />
+            <BookCard key={book._id} book={book} />
           ))}
         </div>
       )}

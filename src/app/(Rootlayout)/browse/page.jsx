@@ -40,8 +40,8 @@ export default async function AllBooksPage({ searchParams }) {
   const page     = Math.max(1, parseInt(params?.page || '1', 10));
 
   // Server-side prefetch for the first render
-  const initialData = await getBooks(`page=${page || 1}&limit=${LIMIT}&${category ? `category=${category}&` : ''}${sort ? `sort=${sort}&` : ''}${q ? `search=${q}` : ''}`);
-  console.log(initialData);
+  const res = await getBooks(`page=${page || 1}&limit=${LIMIT}&${category ? `category=${category}&` : ''}${sort ? `sort=${sort}&` : ''}${q ? `search=${q}` : ''}`);
+  const initialData = res.books
 
   // Heading copy
   const categoryLabel = category ? CATEGORY_LABELS[category] : null;

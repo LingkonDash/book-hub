@@ -27,9 +27,9 @@ function Badge({ children, variant = 'default' }) {
 
 function InfoRow({ label, value }) {
   return (
-    <div className="flex items-start justify-between gap-4 py-3 border-b border-slate-100 last:border-0">
+    <div className="flex items-start justify-between gap-4 py-3 border-b border-slate-100 last:border-0 overflow-hidden">
       <span className="text-sm text-slate-400 shrink-0 w-32">{label}</span>
-      <span className="text-sm text-slate-800 font-medium text-right">{value || '—'}</span>
+      <span className="text-sm text-slate-800 font-medium text-right overflow-hidden">{value || '—'}</span>
     </div>
   );
 }
@@ -85,7 +85,7 @@ function statusBadge(status) {
 
 // ── derived availability from status ──────────────────────
 function isBookAvailable(status) {
-  return status === 'available';
+  return status === 'published';
 }
 
 // ── page ───────────────────────────────────────────────────

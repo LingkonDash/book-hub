@@ -1,4 +1,4 @@
 
-export const getReviews = () => {
-  return [];
+export const getReviews = async () => {
+  return { reviews: [], avgRating: 4.2 };
 };

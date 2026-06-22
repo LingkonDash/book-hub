@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useTransition, useCallback } from 'react';
+import { useState, useEffect, useTransition, useCallback, useRef } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import BookCard from '../shared/BookCard';
 import { toast } from 'react-toastify';
@@ -11,12 +11,12 @@ const LIMIT = 12;
 // ── Skeleton card ──────────────────────────────────────────
 function BookCardSkeleton() {
   return (
-    <div className="bg-black border border-black rounded-2xl overflow-hidden animate-pulse">
-      <div className="bg-slate-100 aspect-3/4 w-full" />
+    <div className="bg-slate-200 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl overflow-hidden animate-pulse">
+      <div className="bg-slate-300 dark:bg-slate-700 aspect-3/4 w-full" />
       <div className="p-3 space-y-2">
-        <div className="bg-slate-100 h-3.5 rounded-full w-3/4" />
-        <div className="bg-slate-100 h-3 rounded-full w-1/2" />
-        <div className="bg-slate-100 h-3 rounded-full w-1/3 mt-1" />
+        <div className="bg-slate-300 dark:bg-slate-700 h-3.5 rounded-full w-3/4" />
+        <div className="bg-slate-300 dark:bg-slate-700 h-3 rounded-full w-1/2" />
+        <div className="bg-slate-300 dark:bg-slate-700 h-3 rounded-full w-1/3 mt-1" />
       </div>
     </div>
   );
@@ -61,11 +61,16 @@ export default function BooksBody({ getData, initialData }) {
   const searchParams = useSearchParams();
   const router = useRouter();
 
-  const [books, setBooks] = useState(initialData ?? []);
-  const [totalCount, setTotalCount] = useState(initialData?.totalCount ?? 0);
+  const [books, setBooks] = useState(initialData.books ?? []);
+  const [totalCount, setTotalCount] = useState(initialData.total ?? 0);
   const [isPending, startTransition] = useTransition();
-  const [firstLoad, setFirstLoad] = useState(false);
 
+  // If SSR gave us data, mark first load as "already done" so we skip the mount fetch
+  const [firstLoad, setFirstLoad] = useState(
+    !(initialData?.books?.length > 0)
+  );
+
+  const isFirstRender = useRef(true);
   // Read params
   const q = searchParams.get('q') || '';
   const category = searchParams.get('category') || '';
@@ -75,18 +80,17 @@ export default function BooksBody({ getData, initialData }) {
   const totalPages = Math.ceil(totalCount / LIMIT);
 
   // ── Fetch ────────────────────────────────────────────────
+
   const fetchBooks = useCallback(() => {
     startTransition(async () => {
       try {
-        // getData is your server action — fill it in on your end.
-        // It receives { q, category, sort, page, limit } and should
-        // return { books: [...], totalCount: number }
-        const result = await getBooks(`page=${page || 1}&limit=${LIMIT}&${category ? `category=${category}&` : ''}${sort ? `sort=${sort}&` : ''}${q ? `search=${q}` : ''}`);
+        const result = await getBooks(
+          `page=${page || 1}&limit=${LIMIT}&${category ? `category=${category}&` : ''}${sort ? `sort=${sort}&` : ''}${q ? `search=${q}` : ''}`
+        );
         setBooks(result?.books ?? []);
         setTotalCount(result?.total ?? 0);
       } catch (err) {
         toast.error('Failed to fetch books:', err);
-        console.log(err);
         setBooks([]);
         setTotalCount(0);
       } finally {
@@ -96,10 +100,17 @@ export default function BooksBody({ getData, initialData }) {
   }, [q, category, sort, page, getData]);
 
   useEffect(() => {
+    // On mount: if SSR already gave us fresh data, just clear the flag and bail
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      if (initialData?.books?.length > 0) {
+        setFirstLoad(false);
+        return;          // ← skip the network call
+      }
+    }
     fetchBooks();
   }, [fetchBooks]);
 
-  console.log(books); 
 
   // ── Page navigation ──────────────────────────────────────
   const goToPage = (p) => {

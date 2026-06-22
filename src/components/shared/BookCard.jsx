@@ -47,7 +47,7 @@ export default function BookCard({ book }) {
 
   return (
     <Link
-      href={`/books/${_id}`}
+      href={`/browse/${_id}`}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       className="group block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#fc4a32]/40 rounded-2xl"

@@ -82,7 +82,7 @@ export default async function AllBooksPage({ searchParams }) {
 
               {/* Stat pills */}
               <div className="flex flex-wrap items-center gap-2 mt-4">
-                <StatPill icon={BiBookOpen}    label={`${initialData.totalCount} books available`} />
+                <StatPill icon={BiBookOpen}    label={`${res.total} books available`} />
                 <StatPill icon={HiOutlineTruck} label="Doorstep delivery" />
                 <StatPill icon={FaRegStar}      label="Verified reviews only" />
               </div>
@@ -94,13 +94,13 @@ export default async function AllBooksPage({ searchParams }) {
                 Showing
               </p>
               <p className="text-2xl font-black text-slate-900 leading-none">
-                {initialData.totalCount === 0
+                {res.total === 0
                   ? '0'
-                  : `${(page - 1) * LIMIT + 1}–${Math.min(page * LIMIT, initialData.totalCount)}`
+                  : `${(page - 1) * LIMIT + 1}–${Math.min(page * LIMIT, res.total)}`
                 }
               </p>
               <p className="text-[11px] text-slate-400 mt-0.5 font-medium">
-                of {initialData.totalCount} books
+                of <span className='font-bold text-black/80'>{res.total}</span> books
               </p>
             </div>
           </div>
@@ -110,7 +110,7 @@ export default async function AllBooksPage({ searchParams }) {
         <SearchAndFiltering />
 
         {/* ── Book grid + Pagination ──────────────────────── */}
-        <BooksBody getData={getBooks} initialData={initialData} />
+        <BooksBody getData={getBooks} initialData={res} />
       </div>
     </div>
   );

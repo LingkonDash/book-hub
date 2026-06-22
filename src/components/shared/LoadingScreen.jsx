@@ -30,11 +30,11 @@ export default function LoadingScreen() {
 
         {/* Pulse ring 2 — offset by 0.66s */}
         <div className="absolute w-[72px] h-[72px] rounded-full bg-[#fc4a32]/10"
-          style={{ animation: 'bd-pulse-ring 2s ease-out 1s infinite' }} />
+          style={{ animation: 'bd-pulse-ring 2s ease-out 0.90s infinite' }} />
 
         {/* Pulse ring 3 — offset by 1.33s */}
         <div className="absolute w-[72px] h-[72px] rounded-full bg-[#fc4a32]/10"
-          style={{ animation: 'bd-pulse-ring 2s ease-out 2s infinite' }} />
+          style={{ animation: 'bd-pulse-ring 2s ease-out 1.80s infinite' }} />
 
         {/* Spinning arc track */}
         <div className="absolute w-[72px] h-[72px] rounded-full border-[2.5px] border-[#fad4de]" />

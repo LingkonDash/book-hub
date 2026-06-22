@@ -153,12 +153,12 @@ export default function Navbar({ session }) {
                                 <FiLayers /> Categories
                               </p>
                               <div className="space-y-1">
-                                <Link href="/browse?cat=all" className="block px-3 py-2 rounded-xl text-sm font-semibold hover:bg-slate-50 text-slate-700 transition-colors">
+                                <Link href="/browse" className="block px-3 py-2 rounded-xl text-sm font-semibold hover:bg-slate-50 text-slate-700 transition-colors">
                                   All Collections
                                   <span className="block text-xs font-normal text-slate-400">Explore complete delivery catalogs</span>
                                 </Link>
-                                <Link href="/browse?cat=academic" className="block px-3 py-2 rounded-xl text-sm font-semibold hover:bg-slate-50 text-slate-700 transition-colors">
-                                  Academic & Research
+                                <Link href="/browse?category=fiction" className="block px-3 py-2 rounded-xl text-sm font-semibold hover:bg-slate-50 text-slate-700 transition-colors">
+                                  Fiction & Manga/anime
                                   <span className="block text-xs font-normal text-slate-400">Textbooks and scientific journals</span>
                                 </Link>
                               </div>
@@ -168,11 +168,11 @@ export default function Navbar({ session }) {
                                 <FiBook /> Quick Filters
                               </p>
                               <div className="space-y-1">
-                                <Link href="/browse?status=available" className="block px-3 py-2 rounded-xl text-sm font-semibold hover:bg-slate-50 text-slate-700 transition-colors">
+                                <Link href="/browse?sort=available" className="block px-3 py-2 rounded-xl text-sm font-semibold hover:bg-slate-50 text-slate-700 transition-colors">
                                   Available Now
                                   <span className="block text-xs font-normal text-slate-400">Ready for instant doorstep drop</span>
                                 </Link>
-                                <Link href="/browse?action=search" className="block px-3 py-2 rounded-xl text-sm font-semibold hover:bg-slate-50 text-slate-700 transition-colors">
+                                <Link href="/browse" className="block px-3 py-2 rounded-xl text-sm font-semibold hover:bg-slate-50 text-slate-700 transition-colors">
                                   Advanced Search
                                   <span className="block text-xs font-normal text-slate-400">Filter by fee range or author</span>
                                 </Link>

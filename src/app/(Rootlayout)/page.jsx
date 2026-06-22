@@ -7,17 +7,20 @@ import NewsletterSection from "@/components/home/Newsletter";
 import HowItWorks from "@/components/home/HowItWorks";
 import ContactSection from "@/components/home/Contact";
 import TopLibrarians from "@/components/home/TopLibrarians";
+import { getFeaturedBooks } from "@/lib/api/getBooks";
 
 
 
 export default async function Home() {
+
+  const featuredBooks = await getFeaturedBooks()
 
   return (
     <>
       <Banner />
       <BenefitsMarquee />
       <CategoryBrowse />
-      <BestSeller />
+      <BestSeller featuredBooks={featuredBooks} />
       <TopLibrarians />
       <PopularSection />
       <HowItWorks />

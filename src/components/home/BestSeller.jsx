@@ -5,78 +5,18 @@ import Link from 'next/link';
 import { motion, useAnimation, useMotionValue, animate } from 'framer-motion';
 import { FiArrowRight, FiBookOpen, FiUser, FiDollarSign, FiChevronLeft, FiChevronRight } from 'react-icons/fi';
 
-const bestSellersMock = [
-  {
-    id: 1,
-    title: "The Fellowship of the Ring",
-    author: "J.R.R. Tolkien",
-    description: "An epic high-fantasy novel that sets off an incredible adventure across Middle-earth.",
-    category: "Fantasy",
-    coverImage: "https://images.unsplash.com/photo-1543002588-bfa74002ed7e?q=80&w=400",
-    deliveryFee: 4.50,
-    status: { stage: "Available", count: 5 }
-  },
-  {
-    id: 2,
-    title: "1984",
-    author: "George Orwell",
-    description: "A dystopian social science fiction novel focusing on the dangers of totalitarianism and extreme surveillance.",
-    category: "Dystopian",
-    coverImage: "https://images.unsplash.com/photo-1541963463532-d68292c34b19?q=80&w=400",
-    deliveryFee: 3.00,
-    status: { stage: "Available", count: 3 }
-  },
-  {
-    id: 3,
-    title: "Neuromancer",
-    author: "William Gibson",
-    description: "The seminal cyberpunk novel following a washed-up computer hacker hired for one last ultimate corporate heist.",
-    category: "Sci-Fi",
-    coverImage: "https://images.unsplash.com/photo-1506880018603-83d5b814b5a6?q=80&w=400",
-    deliveryFee: 5.00,
-    status: { stage: "Checked Out", count: 0 }
-  },
-  {
-    id: 4,
-    title: "To Kill a Mockingbird",
-    author: "Harper Lee",
-    description: "A profound exploration of racial injustice and destroyed innocence in the American Deep South.",
-    category: "Classic Literature",
-    coverImage: "https://images.unsplash.com/photo-1495640388908-05fa85288e61?q=80&w=400",
-    deliveryFee: 3.50,
-    status: { stage: "Available", count: 2 }
-  },
-  {
-    id: 5,
-    title: "The Great Gatsby",
-    author: "F. Scott Fitzgerald",
-    description: "A critique of the disillusioned post-war American Dream set amid the roaring jazz age of Long Island.",
-    category: "Classics",
-    coverImage: "https://images.unsplash.com/photo-1512820790803-83ca734da794?q=80&w=400",
-    deliveryFee: 2.50,
-    status: { stage: "Available", count: 4 }
-  },
-  {
-    id: 6,
-    title: "Brave New World",
-    author: "Aldous Huxley",
-    description: "A visionary dystopian novel exploring a genetically engineered, highly automated caste society.",
-    category: "Sci-Fi",
-    coverImage: "https://images.unsplash.com/photo-1589829085413-56de8ae18c73?q=80&w=400",
-    deliveryFee: 4.00,
-    status: { stage: "Checked Out", count: 0 }
-  }
-];
-
 const CARD_WIDTH = 300;
 const CARD_GAP = 24;
 const CARD_STEP = CARD_WIDTH + CARD_GAP;
 const AUTO_INTERVAL = 2200;
 
-// Triple-clone the list so we can jump seamlessly
-const tripled = [...bestSellersMock, ...bestSellersMock, ...bestSellersMock];
 
-export default function BestSeller() {
+export default function BestSeller( {featuredBooks} ) {
+  
+  // Triple-clone the list so we can jump seamlessly
+  const tripled = [...featuredBooks, ...featuredBooks, ...featuredBooks];
+
+
   const x = useMotionValue(0);
   const trackRef = useRef(null);
   const isDragging = useRef(false);
@@ -90,10 +30,10 @@ export default function BestSeller() {
   const touchStartMotionX = useRef(0);
 
   // The "home" offset = start of the middle set of cards
-  const originOffset = -(bestSellersMock.length * CARD_STEP);
+  const originOffset = -(featuredBooks.length * CARD_STEP);
 
   // Section boundary for loop detection
-  const sectionWidth = bestSellersMock.length * CARD_STEP;
+  const sectionWidth = featuredBooks.length * CARD_STEP;
 
   useEffect(() => {
     // Start at the middle clone so we can go both directions infinitely
@@ -326,7 +266,7 @@ export default function BestSeller() {
             {tripled.map((book, index) => {
               const isAvailable = book.status.stage === "Available";
               // Only animate entrance for the first render pass of the middle clone
-              const isMiddleSet = index >= bestSellersMock.length && index < bestSellersMock.length * 2;
+              const isMiddleSet = index >= featuredBooks.length && index < featuredBooks.length * 2;
 
               return (
                 <motion.div
@@ -338,7 +278,7 @@ export default function BestSeller() {
                   transition={{
                     duration: 0.55,
                     ease: [0.22, 1, 0.36, 1],
-                    delay: (index - bestSellersMock.length) * 0.07
+                    delay: (index - featuredBooks.length) * 0.07
                   }}
                   whileHover={{ y: -4 }}
                   className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800/80 shadow-sm hover:shadow-md transition-shadow duration-300 flex flex-col justify-between group overflow-hidden shrink-0"
@@ -409,7 +349,7 @@ export default function BestSeller() {
 
                       <motion.div whileTap={{ scale: 0.95 }}>
                         <Link
-                          href={`/browse/${book.id}`}
+                          href={`/browse/${book._id}`}
                           className="inline-flex items-center justify-center gap-1.5 px-4 py-2 bg-primary hover:bg-primary/90 text-white text-xs font-bold rounded-xl transition-colors duration-150 shadow-sm shadow-primary/10"
                         >
                           <FiBookOpen className="w-3.5 h-3.5" />

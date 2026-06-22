@@ -11,7 +11,7 @@ const LIMIT = 12;
 // ── Skeleton card ──────────────────────────────────────────
 function BookCardSkeleton() {
   return (
-    <div className="bg-white border border-slate-100 rounded-2xl overflow-hidden animate-pulse">
+    <div className="bg-black border border-black rounded-2xl overflow-hidden animate-pulse">
       <div className="bg-slate-100 aspect-3/4 w-full" />
       <div className="p-3 space-y-2">
         <div className="bg-slate-100 h-3.5 rounded-full w-3/4" />
@@ -127,7 +127,7 @@ export default function BooksBody({ getData, initialData }) {
       {/* ── Result count header ──────────────────────────── */}
       <div className="flex items-center justify-between min-h-[28px]">
         {isLoading ? (
-          <div className="h-4 w-52 bg-slate-100 rounded-full animate-pulse" />
+          <div className="h-4 w-52 bg-black-100 rounded-full animate-pulse" />
         ) : isEmpty ? (
           <p className="text-sm text-slate-400">No books found</p>
         ) : (

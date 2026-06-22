@@ -14,11 +14,12 @@ export const serverFetch = async (path) => {
 export const serverMutation = async (path, data, method = 'POST') => {
     const res = await fetch(`${baseUrl}${path}`, {
         method: method,
-        // headers: {
-        //     'Content-Type': 'application/json',
+        headers: {
+            'Content-Type': 'application/json',
         //     ... await authHeader()
-        // },
+        },
         body: JSON.stringify(data),
     });
 
+    return res.json();
 }

@@ -10,3 +10,11 @@ export const getUserSession = async () => {
 
     return session?.user || null;
 }
+
+
+const getJwtToken = async () => {
+    const { token } = await auth.api.getToken({ headers: await headers() })
+    return token;
+}
+
+export default getJwtToken;

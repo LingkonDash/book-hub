@@ -4,8 +4,6 @@ import { useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { authClient } from "@/lib/auth-client";
-import { Drawer, Button } from "@heroui/react";
-import { motion, AnimatePresence } from "framer-motion";
 import {
   MdDashboard,
   MdMenuBook,
@@ -76,42 +74,31 @@ const ROLE_CONFIG = {
 };
 
 // ─── Nav Link ──────────────────────────────────────────────────────
-function NavLink({ item, pathname, onClick, index }) {
+function NavLink({ item, pathname, onClick }) {
   const isActive =
     item.href === "/dashboard"
       ? pathname === "/dashboard"
       : pathname.startsWith(item.href);
 
   return (
-    <motion.div
-      initial={{ opacity: 0, x: -16 }}
-      animate={{ opacity: 1, x: 0 }}
-      transition={{ delay: index * 0.06, duration: 0.3, ease: "easeOut" }}
-    >
+    <div>
       <Link
         href={item.href}
         onClick={onClick}
         className={`relative flex items-center gap-3 rounded-2xl px-3.5 py-2.5 text-sm font-medium transition-all duration-200 group overflow-hidden ${
           isActive
             ? "text-white"
-            : "text-gray-500 hover:text-[#fc4a32] hover:bg-[#fc4a32]/6"
+            : "text-gray-500 hover:text-[#fc4a32] hover:bg-[#fc4a32]/5"
         }`}
       >
         {/* Active pill background */}
         {isActive && (
-          <motion.span
-            layoutId="activeNavPill"
-            className="absolute inset-0 rounded-2xl bg-gradient-to-r from-[#fc4a32] to-[#ff6b4a] shadow-lg shadow-[#fc4a32]/30"
-            transition={{ type: "spring", stiffness: 380, damping: 34 }}
-          />
+          <span className="absolute inset-0 rounded-2xl bg-gradient-to-r from-[#fc4a32] to-[#ff6b4a] shadow-lg shadow-[#fc4a32]/30" />
         )}
 
         {/* Left accent bar for active */}
         {isActive && (
-          <motion.span
-            layoutId="activeBar"
-            className="absolute left-0 top-1/2 -translate-y-1/2 w-0.5 h-5 rounded-full bg-white/60"
-          />
+          <span className="absolute left-0 top-1/2 -translate-y-1/2 w-0.5 h-5 rounded-full bg-white/60" />
         )}
 
         <item.icon
@@ -128,7 +115,7 @@ function NavLink({ item, pathname, onClick, index }) {
           <span className="absolute inset-0 rounded-2xl bg-[#fc4a32] opacity-0 group-hover:opacity-[0.04] transition-opacity duration-200" />
         )}
       </Link>
-    </motion.div>
+    </div>
   );
 }
 
@@ -162,7 +149,7 @@ function UserAvatar({ session, size = "md" }) {
 }
 
 // ─── Sidebar Core Content ──────────────────────────────────────────
-function SidebarContent({ session, pathname, onNavClick, router }) {
+function SidebarContent({ session, pathname, onNavClick, router, showCloseButton = false }) {
   const role = session?.user?.userRole || "user";
   const navItems = getNavItems(role);
   const roleConfig = ROLE_CONFIG[role] || ROLE_CONFIG["user"];
@@ -180,39 +167,40 @@ function SidebarContent({ session, pathname, onNavClick, router }) {
   };
 
   return (
-    <div className="flex flex-col h-full bg-white">
-      {/* ── Brand ── */}
-      <motion.div
-        initial={{ opacity: 0, y: -8 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.35, ease: "easeOut" }}
-        className="px-5 pt-6 pb-5"
-      >
-        <Link href="/" className="flex items-center gap-2.5 group w-fit">
+    <div className="flex flex-col h-full bg-white select-none">
+      {/* ── Brand Layout Header ── */}
+      <div className="px-5 pt-6 pb-5 flex items-center justify-between">
+        <Link href="/" className="flex items-center gap-2.5 group w-fit" onClick={onNavClick}>
           <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-[#fc4a32] to-[#e03a24] flex items-center justify-center shadow-md shadow-[#fc4a32]/35 group-hover:shadow-[#fc4a32]/50 transition-shadow duration-300">
             <BiBookOpen className="text-white size-5" />
           </div>
           <div className="leading-none">
             <span className="font-extrabold text-gray-900 text-[17px] tracking-tight">
-              Biblio
+              Book
             </span>
             <span className="font-extrabold text-[17px] tracking-tight text-[#fc4a32]">
-              Dropp
+              Hub
             </span>
           </div>
         </Link>
-      </motion.div>
+
+        {/* Floating Close Switch for Mobile Drawer Layouts */}
+        {showCloseButton && (
+          <button
+            onClick={onNavClick}
+            className="p-2 rounded-xl text-gray-400 hover:text-gray-900 hover:bg-gray-100/80 transition-all duration-200 active:scale-95"
+            aria-label="Close menu"
+          >
+            <MdClose className="size-5" />
+          </button>
+        )}
+      </div>
 
       {/* ── Divider ── */}
       <div className="mx-4 h-px bg-gray-100" />
 
-      {/* ── User Card ── */}
-      <motion.div
-        initial={{ opacity: 0, y: -6 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.08, duration: 0.3, ease: "easeOut" }}
-        className="px-4 py-4"
-      >
+      {/* ── User Profile Snapshot ── */}
+      <div className="px-4 py-4">
         <div className="flex items-center gap-3 rounded-2xl bg-gray-50/80 border border-gray-100 px-3.5 py-3">
           <UserAvatar session={session} size="md" />
           <div className="min-w-0 flex-1">
@@ -232,37 +220,34 @@ function SidebarContent({ session, pathname, onNavClick, router }) {
             </span>
           </div>
         </div>
-      </motion.div>
+      </div>
 
       {/* ── Divider ── */}
       <div className="mx-4 h-px bg-gray-100" />
 
-      {/* ── Nav ── */}
-      <nav className="flex-1 px-3 py-4 flex flex-col gap-0.5 overflow-y-auto">
-        <p className="text-[10px] font-bold text-gray-400 uppercase tracking-[0.1em] px-3.5 mb-3">
+      {/* ── Navigation Tree ── */}
+      <nav className="flex-1 px-3 py-4 flex flex-col gap-0.5 space-y-1 overflow-y-auto">
+        <p className="text-[10px] font-bold text-gray-400 uppercase tracking-[0.1em] px-3.5 mb-2">
           Menu
         </p>
-        {navItems.map((item, i) => (
+        {navItems.map((item) => (
           <NavLink
             key={item.href}
             item={item}
             pathname={pathname}
             onClick={onNavClick}
-            index={i}
           />
         ))}
       </nav>
 
-      {/* ── Footer ── */}
+      {/* ── Footer Actions ── */}
       <div className="mx-4 h-px bg-gray-100" />
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.4, duration: 0.3 }}
-        className="px-3 py-4 flex flex-col gap-1"
-      >
+      <div className="px-3 py-4 flex flex-col gap-1">
         <button
-          onClick={handleLogout}
+          onClick={() => {
+            onNavClick?.();
+            handleLogout();
+          }}
           className="flex items-center gap-3 rounded-2xl px-3.5 py-2.5 text-sm font-medium text-gray-500 hover:bg-red-50 hover:text-red-500 transition-all duration-200 w-full group"
         >
           <MdLogout className="size-[18px] text-gray-400 group-hover:text-red-400 transition-colors shrink-0" />
@@ -270,12 +255,13 @@ function SidebarContent({ session, pathname, onNavClick, router }) {
         </button>
         <Link
           href="/"
+          onClick={onNavClick}
           className="flex items-center gap-3 rounded-2xl px-3.5 py-2.5 text-sm font-medium text-gray-400 hover:bg-gray-50 hover:text-gray-600 transition-all duration-200"
         >
           <span className="text-base leading-none">←</span>
           <span>Back to Site</span>
         </Link>
-      </motion.div>
+      </div>
     </div>
   );
 }
@@ -288,79 +274,72 @@ export default function DashboardSidebar({ session }) {
 
   return (
     <>
-      {/* Desktop Sidebar */}
-      <motion.aside
-        initial={{ x: -20, opacity: 0 }}
-        animate={{ x: 0, opacity: 1 }}
-        transition={{ duration: 0.4, ease: "easeOut" }}
-        className="hidden lg:flex flex-col fixed left-0 top-0 bottom-0 w-64 bg-white border-r border-gray-100/80 shadow-[4px_0_24px_-4px_rgba(0,0,0,0.06)] z-30"
-      >
+      {/* 1. Desktop Persistent Sidebar */}
+      <aside className="hidden lg:flex flex-col fixed left-0 top-0 bottom-0 w-80 bg-white border-r border-gray-100/80 shadow-[4px_0_24px_-4px_rgba(0,0,0,0.06)] z-30">
         <SidebarContent
           session={session}
           pathname={pathname}
           onNavClick={() => {}}
           router={router}
         />
-      </motion.aside>
+      </aside>
 
-      {/* Mobile Top Bar */}
+      {/* 2. Mobile Global Top Navigation Header Bar */}
       <div className="lg:hidden fixed top-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-b border-gray-100 shadow-sm px-4 py-3 flex items-center justify-between">
         <Link href="/" className="flex items-center gap-2">
           <div className="w-7 h-7 rounded-xl bg-gradient-to-br from-[#fc4a32] to-[#e03a24] flex items-center justify-center shadow-md shadow-[#fc4a32]/30">
             <BiBookOpen className="text-white size-4" />
           </div>
-          <span className="font-extrabold text-gray-900">
-            Biblio<span className="text-[#fc4a32]">Dropp</span>
+          <span className="font-extrabold text-gray-900 text-sm tracking-tight">
+            Book<span className="text-[#fc4a32]">Hub</span>
           </span>
         </Link>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-3">
           <UserAvatar session={session} size="sm" />
-
-          <Drawer
-            isOpen={isOpen}
-            onOpenChange={setIsOpen}
-            placement="left"
-            size="xs"
-            classNames={{
-              backdrop: "bg-black/40 backdrop-blur-sm",
-              base: "max-w-[272px] bg-white shadow-2xl",
-            }}
+          
+          {/* Custom Action Trigger replacing HeroUI Drawer Button setup */}
+          <button
+            onClick={() => setIsOpen(true)}
+            className="p-2 rounded-xl text-gray-600 hover:bg-gray-100/80 border border-gray-100 transition-all duration-200 active:scale-95"
+            aria-label="Open menu options"
           >
-            <Button
-              variant="light"
-              isIconOnly
-              onPress={() => setIsOpen(true)}
-              className="text-gray-600 hover:bg-gray-100 rounded-xl min-w-0 w-9 h-9"
-              aria-label="Open navigation menu"
-            >
-              <MdMenu className="size-5" />
-            </Button>
-
-            <Drawer.Content>
-              <Drawer.Header className="pb-0 pt-4 px-0 border-none">
-                <div className="flex items-center justify-end px-4">
-                  <Drawer.CloseTrigger asChild>
-                    <button className="p-1.5 rounded-xl hover:bg-gray-100 text-gray-400 transition-colors">
-                      <MdClose className="size-[18px]" />
-                    </button>
-                  </Drawer.CloseTrigger>
-                </div>
-              </Drawer.Header>
-              <Drawer.Body className="p-0">
-                <SidebarContent
-                  session={session}
-                  pathname={pathname}
-                  onNavClick={() => setIsOpen(false)}
-                  router={router}
-                />
-              </Drawer.Body>
-            </Drawer.Content>
-          </Drawer>
+            <MdMenu className="size-5" />
+          </button>
         </div>
       </div>
 
-      {/* Mobile top padding spacer */}
+      {/* 3. Sliding Right Drawer Component (Pure CSS Transitions) */}
+      <div 
+        className={`lg:hidden fixed inset-0 z-50 transition-visibility duration-300 ${
+          isOpen ? "visible" : "invisible pointer-events-none"
+        }`}
+      >
+        {/* Dynamic Dark Matte Backdrop Cover */}
+        <div 
+          className={`absolute inset-0 bg-slate-900/40 backdrop-blur-sm transition-opacity duration-300 ease-in-out ${
+            isOpen ? "opacity-100" : "opacity-0"
+          }`}
+          onClick={() => setIsOpen(false)}
+        />
+
+        {/* Right-Aligned Sliding Core Wrapper Panel */}
+        <div 
+          className={`absolute right-0 top-0 bottom-0 w-full max-w-[290px] h-full bg-white shadow-2xl transform transition-transform duration-300 ease-out ${
+            isOpen ? "translate-x-0" : "translate-x-full"
+          }`}
+        >
+          <SidebarContent
+            session={session}
+            pathname={pathname}
+            onNavClick={() => setIsOpen(false)}
+            router={router}
+            showCloseButton={true}
+          />
+        </div>
+      </div>
+
+      {/* Mobile top structural padding offset spacer */}
       <div className="lg:hidden h-[57px]" />
     </>
   );

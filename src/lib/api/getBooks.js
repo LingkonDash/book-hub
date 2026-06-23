@@ -7,8 +7,8 @@ export const getBooks = async (queryString) =>{
 }
 
 //Get single book
-export const getBookById = async (jobId) => {
-    return serverFetch(`/books/${jobId}`);
+export const getBookById = async (bookId) => {
+    return serverFetch(`/books/${bookId}`);
 }
 
 // Get featured-books

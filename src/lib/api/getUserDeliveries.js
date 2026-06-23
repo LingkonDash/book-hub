@@ -2,8 +2,8 @@
 
 import { protectedServerFetch } from "../core/server";
 
-export const getUserDeliveries = async (queryString) => {
+export const getUserDeliveries = async (userId, queryString) => {
 
-  return protectedServerFetch(`/books?${queryString && queryString}`);
+  return await protectedServerFetch(`/user/deliveries/${userId}?${queryString && queryString}`);
 
 };

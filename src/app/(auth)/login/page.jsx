@@ -63,12 +63,21 @@ export default function LoginPage() {
         return;
       }
 
-      // Step 3: Role-based redirect
-      const userRole = data?.user?.role || "user";
-      const destination =
-        userRole === "librarian" ? "/dashboard/librarian" : 'admin' ? '/dashboard/admin' : "/";
+      console.log(data);
 
-      toast.success(`Welcome back! Redirecting to your dashboard…`);
+      // Step 3: Role-based redirect
+      const userRole = data?.user?.userRole || "user";
+      
+      let destination = "/";
+
+      if (userRole === "librarian") {
+        destination = "/dashboard/librarian";
+      } else if (userRole === "admin") {
+        destination = "/dashboard/admin";
+      }
+
+      if(userRole === 'user') toast.success(`Welcome back! Redirecting to Home.`);
+      toast.success(`Welcome back! Redirecting to your dashboard.`);
 
       setTimeout(() => {
         router.push(destination);
@@ -88,7 +97,7 @@ export default function LoginPage() {
     try {
       await authClient.signIn.social({
         provider: "google",
-        callbackURL: "/", 
+        callbackURL: "/",
       });
       toast.success("Redirecting…", { id: googleToast });
     } catch {

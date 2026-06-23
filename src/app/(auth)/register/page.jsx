@@ -135,7 +135,7 @@ export default function RegisterPage() {
       }
 
       // ── Step 4: Success → role-based redirect ─────────────────────────────
-      toast.success("Account created! Redirecting you to your dashboard…");
+      toast.success("Account created! Redirecting you to home..");
       setSuccessMsg("Account created! Redirecting…");
 
       // Small delay so the success toast is visible before navigation

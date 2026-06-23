@@ -273,7 +273,7 @@ export default function Navbar({ session }) {
                         </div>
 
                         <Link
-                          href={getDashboardPath(session?.user.role)}
+                          href={getDashboardPath(session?.user.userRole)}
                           className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-semibold hover:bg-slate-50 text-slate-700 transition-colors"
                         >
                           <FiGrid className="text-slate-400" />

@@ -3,6 +3,7 @@ import { redirect } from 'next/navigation'
 import Image from 'next/image'
 import { postTransaction } from '@/lib/action/postTransaction'
 import Link from 'next/link'
+import { postDelivery } from '@/lib/action/postDelivery'
 
 export default async function PaymentSuccess({ searchParams }) {
   const { session_id } = await searchParams
@@ -22,24 +23,53 @@ export default async function PaymentSuccess({ searchParams }) {
 
     const transactionId = session.payment_intent?.id ?? session.payment_intent
 
-    await postTransaction({
-      sessionId: session_id,
-      transactionId: transactionId,
+    await postDelivery({
       bookId: metadata.bookId,
       bookTitle: metadata.bookTitle,
-      deliveryFee: Number(metadata.deliveryFee),
+
       userId: metadata.userId,
       userEmail: metadata.userEmail,
-      // delivery address
-      name: metadata.name,
-      phone: metadata.phone,
-      street: metadata.street,
-      city: metadata.city,
-      postal: metadata.postal,
+
+      librarianId: metadata.librarianId,
+      librarianEmail: metadata.librarianEmail,
+
+      transactionId,
+      sessionId: session_id,
+
+      deliveryFee: Number(metadata.deliveryFee),
 
       deliveryStatus: 'pending',
+
+      deliveryAddress: {
+        name: metadata.name,
+        phone: metadata.phone,
+        street: metadata.street,
+        city: metadata.city,
+        postal: metadata.postal,
+      },
+
+      requestedAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    });
+
+    await postTransaction({
+      sessionId: session_id,
+      transactionId,
+
+      bookId: metadata.bookId,
+
+      userId: metadata.userId,
+      userEmail: metadata.userEmail,
+
+      librarianId: metadata.librarianId,
+      librarianEmail: metadata.librarianEmail,
+
+      amount: Number(metadata.deliveryFee),
+
+      paymentStatus: 'paid',
+
       paidAt: new Date().toISOString(),
-    })
+    });
 
 
     return (

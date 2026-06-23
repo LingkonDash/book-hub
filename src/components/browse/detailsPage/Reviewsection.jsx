@@ -141,7 +141,7 @@ function WriteReviewForm({ bookId, currentUser, existingReview, onReviewSubmitte
           method,
           headers: { 'Content-Type': 'application/json' },
           credentials: 'include',
-          body: JSON.stringify({ bookId, rating, comment }),
+          body: JSON.stringify({ bookId, rating, comment, userID, starGiven, }),
         });
 
         const data = await res.json();

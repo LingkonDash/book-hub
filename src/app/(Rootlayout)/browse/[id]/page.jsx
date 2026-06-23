@@ -12,11 +12,11 @@ import ReviewSection from '@/components/browse/detailsPage/Reviewsection';
 // ── tiny helpers ───────────────────────────────────────────
 function Badge({ children, variant = 'default' }) {
   const styles = {
-    default:     'bg-slate-100 text-slate-600',
-    success:     'bg-emerald-50 text-emerald-700 border border-emerald-200',
-    warning:     'bg-amber-50 text-amber-700 border border-amber-200',
-    danger:      'bg-red-50 text-red-600 border border-red-200',
-    primary:     'bg-[#fff0ee] text-[#fc4a32] border border-[#fad4de]',
+    default: 'bg-slate-100 text-slate-600',
+    success: 'bg-emerald-50 text-emerald-700 border border-emerald-200',
+    warning: 'bg-amber-50 text-amber-700 border border-amber-200',
+    danger: 'bg-red-50 text-red-600 border border-red-200',
+    primary: 'bg-[#fff0ee] text-[#fc4a32] border border-[#fad4de]',
   };
   return (
     <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold ${styles[variant]}`}>
@@ -35,14 +35,14 @@ function InfoRow({ label, value }) {
 }
 
 function StarRating({ rating = 0, count = 0 }) {
-  const full  = Math.floor(rating);
-  const half  = rating % 1 >= 0.5;
+  const full = Math.floor(rating);
+  const half = rating % 1 >= 0.5;
   const empty = 5 - full - (half ? 1 : 0);
   return (
     <div className="flex items-center gap-1.5">
       <div className="flex items-center gap-0.5">
-        {Array.from({ length: full  }).map((_, i) => <StarIcon key={`f${i}`} fill />)}
-        {half  && <StarIcon half />}
+        {Array.from({ length: full }).map((_, i) => <StarIcon key={`f${i}`} fill />)}
+        {half && <StarIcon half />}
         {Array.from({ length: empty }).map((_, i) => <StarIcon key={`e${i}`} />)}
       </div>
       <span className="text-sm font-semibold text-slate-700">{rating.toFixed(1)}</span>
@@ -54,23 +54,23 @@ function StarRating({ rating = 0, count = 0 }) {
 function StarIcon({ fill = false, half = false }) {
   if (fill) return (
     <svg className="w-4 h-4 text-amber-400" viewBox="0 0 20 20" fill="currentColor">
-      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.518 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.196-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118L2.049 10.1c-.783-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.518-4.674z"/>
+      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.518 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.196-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118L2.049 10.1c-.783-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.518-4.674z" />
     </svg>
   );
   if (half) return (
     <svg className="w-4 h-4" viewBox="0 0 20 20">
       <defs>
         <linearGradient id="half">
-          <stop offset="50%" stopColor="#fbbf24"/>
-          <stop offset="50%" stopColor="#e2e8f0"/>
+          <stop offset="50%" stopColor="#fbbf24" />
+          <stop offset="50%" stopColor="#e2e8f0" />
         </linearGradient>
       </defs>
-      <path fill="url(#half)" d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.518 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.196-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118L2.049 10.1c-.783-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.518-4.674z"/>
+      <path fill="url(#half)" d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.518 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.196-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118L2.049 10.1c-.783-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.518-4.674z" />
     </svg>
   );
   return (
     <svg className="w-4 h-4 text-slate-200" viewBox="0 0 20 20" fill="currentColor">
-      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.518 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.196-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118L2.049 10.1c-.783-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.518-4.674z"/>
+      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.518 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.196-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118L2.049 10.1c-.783-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.518-4.674z" />
     </svg>
   );
 }
@@ -106,16 +106,17 @@ export default async function BookDetailPage({ params }) {
 
   const {
     _id,
-    title          = 'Untitled',
-    author         = 'Unknown Author',
+    title = 'Untitled',
+    author = 'Unknown Author',
     coverImage,
     description,
     category,
-    deliveryFee    = 0,
-    status         = 'pending',
+    deliveryFee = 0,
+    status = 'pending',
     librarianId,
     librarianEmail,
     createdAt,
+    totalDeliveries,
   } = book;
 
   // Derive availability from status field
@@ -123,8 +124,8 @@ export default async function BookDetailPage({ params }) {
 
   // Pull review stats from the pre-fetched reviews data
   const initialReviews = reviewsData?.reviews ?? [];
-  const avgRating      = reviewsData?.avgRating ?? 0;
-  const reviewCount    = initialReviews.length;
+  const avgRating = reviewsData?.avgRating ?? 0;
+  const reviewCount = initialReviews.length;
 
   return (
     <main className="min-h-screen pt-20 bg-[#fafaf9]">
@@ -151,7 +152,7 @@ export default async function BookDetailPage({ params }) {
                   <div className="w-full h-full bg-gradient-to-br from-slate-100 to-slate-200 flex flex-col items-center justify-center gap-3 p-6 text-center">
                     <svg className="w-12 h-12 text-slate-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.2}
-                        d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+                        d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
                     </svg>
                     <span className="text-xs text-slate-400 font-medium leading-tight">{title}</span>
                   </div>
@@ -210,6 +211,8 @@ export default async function BookDetailPage({ params }) {
                     coverImage,
                     deliveryFee,
                     available: isAvailable,
+                    librarianId,
+                    librarianEmail,
                   }}
                   currentUser={currentUser}
                 />
@@ -251,12 +254,12 @@ export default async function BookDetailPage({ params }) {
             <div className="bg-white rounded-2xl border border-slate-100 p-5 shadow-sm sticky top-6">
               <h3 className="text-sm font-bold text-slate-900 mb-1">Book details</h3>
               <div className="divide-y divide-slate-50">
-                <InfoRow label="Author"         value={author} />
-                <InfoRow label="Category"       value={category} />
-                <InfoRow label="Status"         value={status ? status.charAt(0).toUpperCase() + status.slice(1) : undefined} />
-                <InfoRow label="Delivery fee"   value={`$${Number(deliveryFee).toFixed(2)}`} />
-                {librarianEmail && <InfoRow label="Librarian"      value={librarianEmail} />}
-                {createdAt      && <InfoRow label="Added on"       value={new Date(createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })} />}
+                <InfoRow label="Author" value={author} />
+                <InfoRow label="Category" value={category} />
+                <InfoRow label="Status" value={status ? status.charAt(0).toUpperCase() + status.slice(1) : undefined} />
+                <InfoRow label="Delivery fee" value={`$${Number(deliveryFee).toFixed(2)}`} />
+                {librarianEmail && <InfoRow label="Librarian" value={librarianEmail} />}
+                {createdAt && <InfoRow label="Added on" value={new Date(createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })} />}
               </div>
             </div>
           </div>

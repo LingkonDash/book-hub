@@ -107,6 +107,8 @@ function StepConfirm({ book, address, setAddress, errors, onClose }) {
         <input type="hidden" name="bookId"       value={book._id} />
         <input type="hidden" name="bookTitle"    value={book.title} />
         <input type="hidden" name="deliveryFee"  value={book.deliveryFee} />
+        <input type="hidden" name="librarianId"  value={book.librarianId} />
+        <input type="hidden" name="librarianEmail"  value={book.librarianEmail} />
 
         {/* Address fields */}
         <div className="px-5 mt-5 space-y-3">

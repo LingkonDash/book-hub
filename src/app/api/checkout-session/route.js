@@ -17,6 +17,12 @@ export async function POST(request) {
 
     const bookId      = formData.get('bookId');
     const bookTitle   = formData.get('bookTitle');
+
+    const librarianId   = formData.get('librarianId');
+    const librarianEmail   = formData.get('librarianEmail');
+
+    console.log(librarianId, librarianEmail);
+
     const deliveryFee = formData.get('deliveryFee');
     const name        = formData.get('name');
     const phone       = formData.get('phone');
@@ -41,6 +47,8 @@ export async function POST(request) {
       metadata: {
         bookId,
         bookTitle,
+        librarianId,
+        librarianEmail,
         deliveryFee: Number(deliveryFee),
         userId:      user.id,
         userEmail:   user.email,

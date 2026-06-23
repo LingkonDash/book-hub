@@ -27,7 +27,7 @@ const userNavItems = [
   { label: "Overview", href: "/dashboard/user", icon: MdDashboard },
   { label: "My Deliveries", href: "/dashboard/user/my-deliveries", icon: MdLocalShipping },
   { label: "My Reviews", href: "/dashboard/user/my-reviews", icon: MdStar },
-  { label: "Profile", href: "/dashboard/user/profile", icon: MdPerson },
+  { label: "Profile", href: "/dashboard/profile", icon: MdPerson },
 ];
 
 const librarianNavItems = [
@@ -75,10 +75,7 @@ const ROLE_CONFIG = {
 
 // ─── Nav Link ──────────────────────────────────────────────────────
 function NavLink({ item, pathname, onClick }) {
-  const isActive =
-    item.href === "/dashboard"
-      ? pathname === "/dashboard"
-      : pathname.startsWith(item.href);
+  const isActive = pathname === item.href;
 
   return (
     <div>

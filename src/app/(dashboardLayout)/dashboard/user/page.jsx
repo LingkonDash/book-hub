@@ -1,8 +1,8 @@
+import SpendingCharts from '@/components/dashboard/SpendingCharts';
 import { getUserDeliveries } from '@/lib/api/getUserDeliveries';
 import { getUserTransactions } from '@/lib/api/getUserTransactions';
 import { getUserSession } from '@/lib/core/session';
 import Image from 'next/image';
-// import SpendingCharts from './_components/SpendingCharts'; // your client component slot
 import React from 'react';
 import { CiReceipt } from 'react-icons/ci';
 import { FaTruckMoving } from 'react-icons/fa6';
@@ -115,7 +115,9 @@ const UserPage = async () => {
         <div className="bg-white border border-gray-100 rounded-2xl p-5 shadow-sm">
           <p className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-4">spending activity</p>
           <div className="bg-gray-50/60 rounded-xl border border-dashed border-gray-200 p-8 text-center text-sm text-gray-400 font-medium">
-            {/* <SpendingCharts transactions={transactions} deliveries={deliveries} /> */}
+
+            <SpendingCharts transactions={transactions} deliveries={deliveries}/>
+
             Spending Analytics Panel
           </div>
         </div>
@@ -125,7 +127,7 @@ const UserPage = async () => {
           <div className="flex items-center justify-between px-1">
             <p className="text-xs font-bold uppercase tracking-widest text-gray-400">recent deliveries</p>
             <a
-              href="/user/deliveries"
+              href="/user/my-deliveries"
               className="text-xs font-bold text-[#fc4a32] hover:text-[#fc4a32]/80 transition-colors bg-[#fc4a32]/5 hover:bg-[#fc4a32]/10 px-3 py-1.5 rounded-xl"
             >
               View all →

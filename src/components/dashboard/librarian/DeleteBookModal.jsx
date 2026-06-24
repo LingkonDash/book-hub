@@ -2,22 +2,26 @@
 
 import { deleteBook } from "@/lib/action/librarianAction/deleteBook";
 import { AlertDialog, Button } from "@heroui/react";
+import { useRouter } from "next/navigation";
 import { TiTrash } from "react-icons/ti";
 import { toast } from "react-toastify";
 
-export function DeleteBookModal({ book, onActionComplete }) {
+export function DeleteBookModal({ book }) {
+  const router = useRouter();
 
   const handleDelete = async () => {
-
     try {
-      const res = await deleteBook(book._id)
-      if (res.deletedCount > 0) toast.success('Book deleted.')
-      else toast.error('Failed to delete. Try again!')
-      onActionComplete()
+      const res = await deleteBook(book._id);
+      if (res.deletedCount > 0) {
+        toast.success('Book deleted.');
+      } else {
+        toast.error('Failed to delete. Try again!');
+      }
+      router.refresh();
     } catch {
-      toast.error('Failed to delete.')
+      toast.error('Failed to delete.');
     }
-  }
+  };
 
   return (
     <AlertDialog>

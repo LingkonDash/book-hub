@@ -1,13 +1,10 @@
 'use client'
 
-import { useState, useTransition } from 'react'
-import { useRouter, useSearchParams, usePathname } from 'next/navigation'
+import { useState, useEffect } from 'react'
 import Image from 'next/image'
 import BookStatusBadge from './BookStatusBadge'
 import BookActionMenu from './BookActionMenu'
 import { TiBook } from 'react-icons/ti'
-import { HiChevronLeft, HiChevronRight } from 'react-icons/hi'
-import { getLibrarianBooks } from '@/lib/api/librarian/getLibrarianBooks'
 
 const COLUMNS = [
   { key: 'cover',   label: '',          width: 'w-14' },
@@ -18,35 +15,13 @@ const COLUMNS = [
   { key: 'actions', label: 'Actions',   width: 'w-16' },
 ]
 
-const MyBooksTable = ({ initialBooks, totalPage, currentPage, librarianId }) => {
-  const router = useRouter()
-  const pathname = usePathname()
-  const searchParams = useSearchParams()
-
+const MyBooksTable = ({ initialBooks }) => {
   const [books, setBooks] = useState(initialBooks)
-  const [page, setPage] = useState(currentPage)
-  const [total, setTotal] = useState(totalPage)
-  const [isPending, startTransition] = useTransition()
 
-  const fetchPage = (newPage) => {
-    startTransition(async () => {
-      const params = new URLSearchParams(searchParams.toString())
-      params.set('page', newPage)
-      router.replace(`${pathname}?${params.toString()}`, { scroll: false })
-
-      const res = await getLibrarianBooks(librarianId, newPage)
-      setBooks(res.data)
-      setPage(res.currentPage)
-      setTotal(res.totalPage)
-    })
-  }
-
-  const refreshCurrent = () => {
-    fetchPage(page);
-  }
-
-  const hasPrev = page > 1
-  const hasNext = page < total
+  // Sync state cleanly whenever router.refresh() yields updated server arrays
+  useEffect(() => {
+    setBooks(initialBooks)
+  }, [initialBooks])
 
   return (
     <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-visible">
@@ -60,7 +35,7 @@ const MyBooksTable = ({ initialBooks, totalPage, currentPage, librarianId }) => 
       ) : (
         <>
           {/* Mobile Card List View (Visible below md) */}
-          <div className={`md:hidden divide-y divide-gray-100 p-2 space-y-3 transition-opacity duration-200 ${isPending ? 'opacity-50' : 'opacity-100'}`}>
+          <div className="md:hidden divide-y divide-gray-100 p-2 space-y-3">
             {books?.map((book) => (
               <div key={book._id} className="p-3 bg-gray-50/50 rounded-xl border border-gray-100 flex gap-4 items-start relative">
                 
@@ -102,7 +77,7 @@ const MyBooksTable = ({ initialBooks, totalPage, currentPage, librarianId }) => 
 
                 {/* Mobile Floating Actions Absolute Anchor */}
                 <div className="absolute top-2 right-2">
-                  <BookActionMenu book={book} onActionComplete={refreshCurrent} />
+                  <BookActionMenu book={book} />
                 </div>
               </div>
             ))}
@@ -126,12 +101,11 @@ const MyBooksTable = ({ initialBooks, totalPage, currentPage, librarianId }) => 
                 </tr>
               </thead>
 
-              <tbody className={`divide-y divide-gray-50 transition-opacity duration-200 ${isPending ? 'opacity-50' : 'opacity-100'}`}>
+              <tbody className="divide-y divide-gray-50">
                 {books?.map((book) => (
                   <BookRow
                     key={book._id}
                     book={book}
-                    onActionComplete={refreshCurrent}
                   />
                 ))}
               </tbody>
@@ -139,58 +113,11 @@ const MyBooksTable = ({ initialBooks, totalPage, currentPage, librarianId }) => 
           </div>
         </>
       )}
-
-      {/* Pagination Wrapper Frame */}
-      {total > 1 && (
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-3 px-4 py-3 border-t border-gray-100 bg-white rounded-b-2xl mt-4 sm:mt-0">
-          <p className="text-xs text-gray-400 text-center sm:text-left">
-            Page <span className="font-medium text-gray-600">{page}</span> of{' '}
-            <span className="font-medium text-gray-600">{total}</span>
-          </p>
-
-          <div className="flex items-center justify-center gap-1 w-full sm:w-auto">
-            <button
-              onClick={() => fetchPage(page - 1)}
-              disabled={!hasPrev || isPending}
-              className="p-1.5 rounded-lg text-gray-400 hover:text-gray-700 hover:bg-gray-100 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
-              aria-label="Previous page"
-            >
-              <HiChevronLeft className="w-4 h-4" />
-            </button>
-
-            <div className="flex items-center gap-1 max-w-[240px] sm:max-w-none overflow-x-auto px-1 scrollbar-none">
-              {Array.from({ length: total }, (_, i) => i + 1).map((n) => (
-                <button
-                  key={n}
-                  onClick={() => fetchPage(n)}
-                  disabled={isPending}
-                  className={`w-7 h-7 flex-shrink-0 rounded-lg text-xs font-medium transition-colors ${
-                    n === page
-                      ? 'bg-[#fc4a32] text-white shadow-sm'
-                      : 'text-gray-500 hover:bg-gray-100'
-                  }`}
-                >
-                  {n}
-                </button>
-              ))}
-            </div>
-
-            <button
-              onClick={() => fetchPage(page + 1)}
-              disabled={!hasNext || isPending}
-              className="p-1.5 rounded-lg text-gray-400 hover:text-gray-700 hover:bg-gray-100 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
-              aria-label="Next page"
-            >
-              <HiChevronRight className="w-4 h-4" />
-            </button>
-          </div>
-        </div>
-      )}
     </div>
   )
 }
 
-const BookRow = ({ book, onActionComplete }) => (
+const BookRow = ({ book }) => (
   <tr className="hover:bg-gray-50/60 transition-colors group">
     {/* Cover */}
     <td className="px-4 py-3 w-14">
@@ -238,9 +165,9 @@ const BookRow = ({ book, onActionComplete }) => (
 
     {/* Actions */}
     <td className="px-4 py-3 w-16 text-right overflow-visible">
-      <BookActionMenu book={book} onActionComplete={onActionComplete} />
+      <BookActionMenu book={book} />
     </td>
   </tr>
 )
 
-export default MyBooksTable
+export default MyBooksTable;

@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useRef, useEffect } from 'react'
-import { TiEye, TiEdit, TiTrash, TiChevronRight } from 'react-icons/ti'
+import { TiEye, TiEdit } from 'react-icons/ti'
 import { HiDotsVertical } from 'react-icons/hi'
 import { useRouter } from 'next/navigation'
 import { toast } from 'react-toastify'
@@ -9,7 +9,7 @@ import { unpublishBook } from '@/lib/action/librarianAction/unpublishBook'
 import { publishBook } from '@/lib/action/librarianAction/publishBook'
 import { DeleteBookModal } from './DeleteBookModal'
 
-const BookActionMenu = ({ book, onActionComplete }) => {
+const BookActionMenu = ({ book }) => {
   const [open, setOpen] = useState(false)
   const [loading, setLoading] = useState(null)
   const menuRef = useRef(null)
@@ -29,9 +29,9 @@ const BookActionMenu = ({ book, onActionComplete }) => {
     setOpen(false)
     setLoading('unpublish')
     try {
-      await unpublishBook(book._id)
+      const res = await unpublishBook(book._id)
       toast.success('Book unpublished.')
-      onActionComplete()
+      router.refresh();
     } catch {
       toast.error('Failed to unpublish.')
     } finally {
@@ -43,9 +43,9 @@ const BookActionMenu = ({ book, onActionComplete }) => {
     setOpen(false)
     setLoading('publish')
     try {
-      await publishBook(book._id)
+      const res = await publishBook(book._id)
       toast.success('Book published!')
-      onActionComplete()
+      router.refresh()
     } catch {
       toast.error('Failed to publish.')
     } finally {
@@ -137,16 +137,7 @@ const BookActionMenu = ({ book, onActionComplete }) => {
           <div className="my-1 border-t border-gray-100" />
 
           {/* Delete — always available */}
-
-          <DeleteBookModal book={book} onActionComplete={onActionComplete}/>
-
-          {/* <button
-            onClick={handleDelete}
-            className="w-full flex items-center gap-2.5 px-3 py-2 text-sm text-red-500 hover:bg-red-50 transition-colors cursor-pointer"
-          >
-            <TiTrash className="w-4 h-4" />
-            Delete book
-          </button> */}
+          <DeleteBookModal book={book} />
         </div>
       )}
     </div>

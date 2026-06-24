@@ -14,10 +14,11 @@ const UserPage = async () => {
   const { transactions, totalSpending } = await getUserTransactions(user?.id);
 
   // Derived stats
-  const booksRead = deliveries.filter((d) => d.status === 'Delivered').length;
+  const booksRead = deliveries.filter((d) => d.deliveryStatus === 'delivered').length;
   const pendingDeliveries = deliveries.filter(
-    (d) => d.status === 'Pending' || d.status === 'Dispatched'
+    (d) => d.deliveryStatus === 'pending' || d.deliveryStatus === 'dispatched'
   ).length;
+  console.log(deliveries);
   const recentDeliveries = deliveries.slice(0, 5);
 
   const stats = [
@@ -113,12 +114,12 @@ const UserPage = async () => {
 
         {/* Chart slot — client component background wrapper */}
         <div className="bg-white border border-gray-100 rounded-2xl p-5 shadow-sm">
-          <p className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-4">spending activity</p>
+          <p className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-4">User activity</p>
           <div className="bg-gray-50/60 rounded-xl border border-dashed border-gray-200 p-8 text-center text-sm text-gray-400 font-medium">
 
             <SpendingCharts transactions={transactions} deliveries={deliveries}/>
 
-            Spending Analytics Panel
+            Dashboard Analytics Panel
           </div>
         </div>
 

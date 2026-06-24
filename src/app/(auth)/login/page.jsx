@@ -77,7 +77,7 @@ export default function LoginPage() {
       }
 
       if(userRole === 'user') toast.success(`Welcome back! Redirecting to Home.`);
-      toast.success(`Welcome back! Redirecting to your dashboard.`);
+      else toast.success(`Welcome back! Redirecting to your dashboard.`);
 
       setTimeout(() => {
         router.push(destination);

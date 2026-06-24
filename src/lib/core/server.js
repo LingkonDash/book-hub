@@ -18,8 +18,8 @@ export const protectedServerFetch = async (path) => {
             headers: await authHeader()
         }
     );
-
-    return res.json();
+    const data = await res.json()
+    return data;
 }
 
 

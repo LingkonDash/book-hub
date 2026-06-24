@@ -95,7 +95,7 @@ const BookActionMenu = ({ book, onActionComplete }) => {
               setOpen(false)
               router.push(`/browse/${book._id}`)
             }}
-            className="w-full flex items-center gap-2.5 px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
+            className="w-full flex items-center gap-2.5 px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors cursor-pointer"
           >
             <TiEye className="w-4 h-4 text-gray-400" />
             View details
@@ -107,7 +107,7 @@ const BookActionMenu = ({ book, onActionComplete }) => {
               setOpen(false)
               router.push(`/dashboard/librarian/edit/${book._id}`)
             }}
-            className="w-full flex items-center gap-2.5 px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
+            className="w-full flex items-center gap-2.5 px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors cursor-pointer"
           >
             <TiEdit className="w-4 h-4 text-gray-400" />
             Edit book
@@ -119,7 +119,7 @@ const BookActionMenu = ({ book, onActionComplete }) => {
           {book.status === 'published' && (
             <button
               onClick={handleUnpublish}
-              className="w-full flex items-center gap-2.5 px-3 py-2 text-sm text-amber-600 hover:bg-amber-50 transition-colors"
+              className="w-full flex items-center gap-2.5 px-3 py-2 text-sm text-amber-600 hover:bg-amber-50 transition-colors cursor-pointer"
             >
               <span className="w-4 h-4 flex items-center justify-center">
                 <span className="w-2 h-2 rounded-full bg-amber-400" />
@@ -132,7 +132,7 @@ const BookActionMenu = ({ book, onActionComplete }) => {
           {book.status === 'unpublished' && (
             <button
               onClick={handlePublish}
-              className="w-full flex items-center gap-2.5 px-3 py-2 text-sm text-emerald-600 hover:bg-emerald-50 transition-colors"
+              className="w-full flex items-center gap-2.5 px-3 py-2 text-sm text-emerald-600 hover:bg-emerald-50 transition-colors cursor-pointer"
             >
               <span className="w-4 h-4 flex items-center justify-center">
                 <span className="w-2 h-2 rounded-full bg-emerald-500" />
@@ -156,7 +156,7 @@ const BookActionMenu = ({ book, onActionComplete }) => {
           {/* Delete — always available */}
           <button
             onClick={handleDelete}
-            className="w-full flex items-center gap-2.5 px-3 py-2 text-sm text-red-500 hover:bg-red-50 transition-colors"
+            className="w-full flex items-center gap-2.5 px-3 py-2 text-sm text-red-500 hover:bg-red-50 transition-colors cursor-pointer"
           >
             <TiTrash className="w-4 h-4" />
             Delete book

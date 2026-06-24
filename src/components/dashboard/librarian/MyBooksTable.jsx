@@ -91,7 +91,7 @@ const MyBooksTable = ({ initialBooks, totalPage, currentPage, librarianId }) => 
                       {book.category}
                     </span>
                     <span className="text-xs font-semibold text-gray-700 bg-white border border-gray-200 px-2 py-0.5 rounded-md">
-                      ৳{book.deliveryFee}
+                      ${book.deliveryFee}
                     </span>
                   </div>
 
@@ -227,7 +227,7 @@ const BookRow = ({ book, onActionComplete }) => (
     {/* Delivery Fee */}
     <td className="px-4 py-3 w-24">
       <span className="text-sm font-medium text-gray-700">
-        ৳{book.deliveryFee}
+        $ {book.deliveryFee}
       </span>
     </td>
 

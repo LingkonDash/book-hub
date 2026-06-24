@@ -145,7 +145,11 @@ function DeliveryRow({ delivery }) {
 
         // 2. Use the exact message from the backend if available, or fallback to your default
         const successMsg = response?.message || `Delivery status updated to ${nextStatus}`;
-        toast.success(successMsg);
+        if (response?.result?.modifiedCount > 0) {
+          toast.success(successMsg)
+        } else {
+          toast.error('Something went wrong try again')
+        }
 
         setCurrentStatus(nextStatus);
       } catch (err) {

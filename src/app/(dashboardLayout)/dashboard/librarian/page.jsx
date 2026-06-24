@@ -13,7 +13,7 @@ const LibrarianPage = async () => {
 
   // You'll need these 3 API helpers — same pattern as user side
   const { books } = await getLibrarianBooks(user?.id);
-  console.log(books);
+  
   const { deliveries } = await getLibrarianDeliveries(user?.id);
   const { transactions, totalEarnings } = await getLibrarianTransactions(user?.id);
 

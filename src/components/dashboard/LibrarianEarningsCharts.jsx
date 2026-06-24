@@ -20,42 +20,51 @@ export default function LibrarianEarningsCharts({
   deliveries = [],
   books = [],
 }) {
-  // --- Chart 1: Earnings per book (from transactions) ---
-  // Group by bookTitle and sum amounts
-  const earningsMap = {};
-  transactions.forEach((t) => {
-    const title = t.bookTitle || "Unknown";
-    earningsMap[title] = (earningsMap[title] || 0) + t.amount;
-  });
-  const earningsData = Object.entries(earningsMap).map(([name, amount]) => ({
-    name: name.length > 12 ? name.slice(0, 12) + "…" : name,
-    amount: parseFloat(amount.toFixed(2)),
-  }));
+  
+  // --- Chart 1: Latest Deliveries Earnings ---
+  // Sort by date to get the latest transactions/deliveries, slice to max 6 bars
+  const latestEarningsData = [...transactions]
+    .sort((a, b) => new Date(b.paidAt || 0) - new Date(a.paidAt || 0))
+    .slice(0, 6)
+    .map((t, index) => {
+      // Find the corresponding book title from books array or deliveries array for identification
+      const correspondingDelivery = deliveries.find(d => d.transactionId === t.transactionId);
+      const rawTitle = correspondingDelivery?.bookTitle || "Delivery #" + (index + 1);
+      
+      return {
+        name: rawTitle.length > 12 ? rawTitle.slice(0, 12) + "…" : rawTitle,
+        amount: parseFloat(t.amount || 0),
+      };
+    });
 
   // --- Chart 2: Delivery status breakdown ---
   let pending = 0, dispatched = 0, delivered = 0;
   deliveries.forEach((d) => {
-    if (d.deliveryStatus === "pending") pending++;
-    else if (d.deliveryStatus === "dispatched") dispatched++;
-    else if (d.deliveryStatus === "delivered") delivered++;
+    // Check both standard deliveryStatus or state properties to be completely safe
+    const status = d.deliveryStatus || d.status;
+    if (status === "pending") pending++;
+    else if (status === "dispatched") dispatched++;
+    else if (status === "delivered") delivered++;
   });
+
   const deliveryData = [
     { name: "Pending",    value: pending,    color: "#fc4a32" },
     { name: "Dispatched", value: dispatched, color: "#378ADD" },
     { name: "Delivered",  value: delivered,  color: "#1D9E75" },
   ].filter((d) => d.value > 0);
 
-  // --- Chart 3: Book status breakdown (librarian-only) ---
+  // --- Chart 3: Book status breakdown ---
   let published = 0, pendingApproval = 0, unpublished = 0;
   books.forEach((b) => {
     if (b.status === "published") published++;
     else if (b.status === "pending") pendingApproval++;
     else if (b.status === "unpublished") unpublished++;
   });
+
   const bookStatusData = [
-    { name: "Published",  value: published,       color: "#3B6D11" },
-    { name: "Pending",    value: pendingApproval, color: "#854F0B" },
-    { name: "Unpublished",value: unpublished,     color: "#888780" },
+    { name: "Published",   value: published,       color: "#3B6D11" },
+    { name: "Pending",     value: pendingApproval, color: "#854F0B" },
+    { name: "Unpublished", value: unpublished,     color: "#888780" },
   ].filter((d) => d.value > 0);
 
   // Custom tooltip styles
@@ -92,7 +101,7 @@ export default function LibrarianEarningsCharts({
         gap: "20px",
       }}
     >
-      {/* Chart 1 — Earnings per book */}
+      {/* Chart 1 — Earnings per latest deliveries */}
       <div
         style={{
           background: "#fff",
@@ -109,19 +118,19 @@ export default function LibrarianEarningsCharts({
             color: "#111827",
           }}
         >
-          Earnings per book
+          Latest Deliveries Earnings
         </p>
         <p
           style={{ margin: "0 0 16px", fontSize: "12px", color: "#9ca3af" }}
         >
-          Total delivery fee revenue by title
+          Revenue details for individual recent deliveries
         </p>
-        {earningsData.length === 0 ? (
+        {latestEarningsData.length === 0 ? (
           noData("earnings")
         ) : (
           <div style={{ width: "100%", height: 260 }}>
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={earningsData} margin={{ left: -20 }}>
+              <BarChart data={latestEarningsData} margin={{ left: -20 }}>
                 <CartesianGrid
                   strokeDasharray="3 3"
                   vertical={false}
@@ -214,7 +223,7 @@ export default function LibrarianEarningsCharts({
         )}
       </div>
 
-      {/* Chart 3 — Book status (librarian-only) */}
+      {/* Chart 3 — Book status */}
       <div
         style={{
           background: "#fff",

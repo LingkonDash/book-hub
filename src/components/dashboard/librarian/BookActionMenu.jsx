@@ -7,6 +7,7 @@ import { useRouter } from 'next/navigation'
 import { toast } from 'react-toastify'
 import { unpublishBook } from '@/lib/action/librarianAction/unpublishBook'
 import { publishBook } from '@/lib/action/librarianAction/publishBook'
+import { DeleteBookModal } from './DeleteBookModal'
 
 const BookActionMenu = ({ book, onActionComplete }) => {
   const [open, setOpen] = useState(false)
@@ -52,24 +53,6 @@ const BookActionMenu = ({ book, onActionComplete }) => {
     }
   }
 
-  const handleDelete = async () => {
-    setOpen(false)
-    const confirmed = window.confirm(
-      `Are you sure you want to delete "${book.title}"? This cannot be undone.`
-    )
-    if (!confirmed) return
-
-    try {
-      await deleteBook(book._id)
-      toast.success('Book deleted.')
-      onActionComplete()
-    } catch {
-      toast.error('Failed to delete.')
-    } finally {
-      setLoading(null)
-    }
-  }
-
   const isLoading = loading !== null
 
   return (
@@ -88,7 +71,7 @@ const BookActionMenu = ({ book, onActionComplete }) => {
       </button>
 
       {open && (
-        <div className="absolute right-2 top-full mt-1 z-100 w-44 bg-white border border-gray-100 rounded-xl shadow-xl py-1">
+        <div className="absolute right-2 top-full mt-1 z-20 w-44 bg-white border border-gray-100 rounded-xl shadow-xl py-1">
           {/* View — always available */}
           <button
             onClick={() => {
@@ -154,13 +137,16 @@ const BookActionMenu = ({ book, onActionComplete }) => {
           <div className="my-1 border-t border-gray-100" />
 
           {/* Delete — always available */}
-          <button
+
+          <DeleteBookModal book={book} onActionComplete={onActionComplete}/>
+
+          {/* <button
             onClick={handleDelete}
             className="w-full flex items-center gap-2.5 px-3 py-2 text-sm text-red-500 hover:bg-red-50 transition-colors cursor-pointer"
           >
             <TiTrash className="w-4 h-4" />
             Delete book
-          </button>
+          </button> */}
         </div>
       )}
     </div>

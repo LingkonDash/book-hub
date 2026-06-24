@@ -42,7 +42,7 @@ const MyBooksTable = ({ initialBooks, totalPage, currentPage, librarianId }) => 
   }
 
   const refreshCurrent = () => {
-    fetchPage(page)
+    fetchPage(page);
   }
 
   const hasPrev = page > 1

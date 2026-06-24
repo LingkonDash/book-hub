@@ -17,7 +17,7 @@ const ProfilePage = async () => {
     : 'Recently';
 
   return (
-    <div className="min-h-[80vh] flex items-center justify-center p-4 pt-15 md:mt-0 bg-gradient-to-br from-slate-50 to-slate-100/50">
+    <div className="min-h-[80vh] flex items-center justify-center p-4 pt-10 md:mt-0 bg-gradient-to-br from-slate-50 to-slate-100/50">
       <div className="w-full max-w-xl bg-white border border-slate-100 shadow-xl rounded-3xl overflow-hidden relative group transition-all duration-300 hover:shadow-2xl">
         
         {/* Decorative Top Accent Layer with Brand Color Variations */}

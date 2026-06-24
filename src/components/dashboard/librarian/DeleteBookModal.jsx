@@ -37,7 +37,7 @@ export function DeleteBookModal({ book, onActionComplete }) {
             </AlertDialog.Header>
             <AlertDialog.Body>
               <p>
-                Are you sure you want to delete <strong>${book.title}</strong>? This cannot be undone.
+                Are you sure you want to delete <strong>{book.title}</strong>? This cannot be undone.
               </p>
             </AlertDialog.Body>
             <AlertDialog.Footer>
@@ -45,7 +45,7 @@ export function DeleteBookModal({ book, onActionComplete }) {
                 Cancel
               </Button>
               <Button onClick={handleDelete} slot="close" variant="danger">
-                Delete Project
+                Delete Book
               </Button>
             </AlertDialog.Footer>
           </AlertDialog.Dialog>

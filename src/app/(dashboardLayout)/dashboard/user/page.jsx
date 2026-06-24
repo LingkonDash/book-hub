@@ -54,7 +54,7 @@ const UserPage = async () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#fad4de]/30 via-white to-white p-4 sm:p-6 md:p-8 pt-16 md:pt-6 mx-auto transition-colors duration-300">
-      <div className="max-w-6xl mx-auto space-y-8">
+      <div className="mx-auto space-y-8">
         {/* Hero banner */}
         <div className="relative overflow-hidden bg-primary rounded-2xl p-6 sm:p-8 flex items-center justify-between shadow-lg shadow-primary/10">
           <div className="absolute -right-5 -top-8 w-40 h-40 rounded-full bg-[#e03e27] opacity-40 pointer-events-none" />
@@ -83,7 +83,7 @@ const UserPage = async () => {
         <div className="border-b border-gray-100 pb-4">
           <p className="text-xs text-gray-400 uppercase tracking-widest font-semibold mb-0.5">Overview</p>
           <h1 className="text-2xl font-bold text-gray-900 tracking-tight">
-            Welcome back, {user?.name?.split(' ')[0] || 'Reader'} 👋
+            Welcome back, {user?.name?.split(' ')[0] || 'Reader'}
           </h1>
           <p className="text-sm text-gray-500">Heres a snapshot of your reading activity.</p>
         </div>

@@ -113,13 +113,13 @@ const LibrarianPage = async () => {
         </div>
 
         {/* Section header */}
-        <div className="border-b border-gray-100 pb-4">
+        {/* <div className="border-b border-gray-100 pb-4">
           <p className="text-xs text-gray-400 uppercase tracking-widest font-semibold mb-0.5">Overview</p>
           <h1 className="text-2xl font-bold text-gray-900 tracking-tight">
             Welcome back, {user?.name?.split(' ')[0] || 'Librarian'}
           </h1>
           <p className="text-sm text-gray-500">Here is your library and delivery activity at a glance.</p>
-        </div>
+        </div> */}
 
         {/* Quick stats — 4 cols for librarian */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">

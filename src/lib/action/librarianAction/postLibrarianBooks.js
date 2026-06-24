@@ -1,6 +1,6 @@
 'use server'
 
-import { serverMutation } from "../core/server"
+import { serverMutation } from "../../core/server"
 
 
 export const postLibrarianBooks = async (book, id) => {

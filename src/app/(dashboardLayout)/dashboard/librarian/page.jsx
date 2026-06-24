@@ -13,6 +13,7 @@ const LibrarianPage = async () => {
 
   // You'll need these 3 API helpers — same pattern as user side
   const { books } = await getLibrarianBooks(user?.id);
+  console.log(books);
   const { deliveries } = await getLibrarianDeliveries(user?.id);
   const { transactions, totalEarnings } = await getLibrarianTransactions(user?.id);
 
@@ -86,8 +87,8 @@ const LibrarianPage = async () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#fad4de]/30 via-white to-white p-4 sm:p-6 md:p-8 pt-16 md:pt-6 transition-colors duration-300">
-      <div className="max-w-6xl mx-auto space-y-8">
+    <div className="min-h-screen bg-gradient-to-b from-[#fad4de]/30 via-white to-white p-4 sm:p-6 pt-5 md:pt-18 lg:pt-4 transition-colors duration-300">
+      <div className="mx-auto space-y-8">
 
         {/* Hero banner */}
         <div className="relative overflow-hidden bg-primary rounded-2xl p-6 sm:p-8 flex items-center justify-between shadow-lg shadow-primary/10">

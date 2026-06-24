@@ -1,20 +1,11 @@
 'use server'
 
-import { getUserSession } from "@/lib/core/session";
 import { serverMutation } from "../../core/server"
-import { getBookById } from "@/lib/api/getBooks";
 
 
 export const publishBook = async (bookId) => {
 
-  const user = await getUserSession();
+  const res =  await serverMutation(`/books/${bookId}`, {status: 'pending'}, 'PATCH');
 
-  console.log(user);
-
-   const book = await getBookById(bookId)
-  console.log(book);
-
-  // const res =  await serverMutation(`books/${bookId}`, {status: 'published'}, 'PATCH');
-
-  return //res;
+  return res;
 }

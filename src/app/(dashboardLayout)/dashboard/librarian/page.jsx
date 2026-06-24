@@ -159,7 +159,7 @@ const LibrarianPage = async () => {
           <div className="bg-white border border-gray-100 rounded-2xl p-5 shadow-sm">
             <div className="flex items-center justify-between mb-4">
               <p className="text-xs font-bold uppercase tracking-widest text-gray-400">My books</p>
-              <a href="/librarian/my-books" className="text-xs font-bold text-[#fc4a32] bg-[#fc4a32]/5 hover:bg-[#fc4a32]/10 px-3 py-1.5 rounded-xl transition-colors">
+              <a href="/dashboard/librarian/my-books" className="text-xs font-bold text-[#fc4a32] bg-[#fc4a32]/5 hover:bg-[#fc4a32]/10 px-3 py-1.5 rounded-xl transition-colors">
                 Manage →
               </a>
             </div>
@@ -170,7 +170,7 @@ const LibrarianPage = async () => {
                     <FiBook className="text-[#fc4a32] text-sm" />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-bold text-gray-900 truncate">{b.bookTitle}</p>
+                    <p className="text-sm font-bold text-gray-900 truncate">{b.title}</p>
                     <p className="text-xs text-gray-500 mt-0.5">${b.deliveryFee?.toFixed(2)} fee</p>
                   </div>
                   <span className={`text-[10px] font-semibold uppercase tracking-wide px-2.5 py-1 rounded-full ${bookStatusBadge[b.status] ?? 'bg-gray-50 text-gray-600 border border-gray-200'}`}>
@@ -185,7 +185,7 @@ const LibrarianPage = async () => {
           <div className="bg-white border border-gray-100 rounded-2xl p-5 shadow-sm">
             <div className="flex items-center justify-between mb-4">
               <p className="text-xs font-bold uppercase tracking-widest text-gray-400">Open deliveries</p>
-              <a href="/librarian/deliveries" className="text-xs font-bold text-[#fc4a32] bg-[#fc4a32]/5 hover:bg-[#fc4a32]/10 px-3 py-1.5 rounded-xl transition-colors">
+              <a href="/dashboard/librarian/deliveries" className="text-xs font-bold text-[#fc4a32] bg-[#fc4a32]/5 hover:bg-[#fc4a32]/10 px-3 py-1.5 rounded-xl transition-colors">
                 View all →
               </a>
             </div>

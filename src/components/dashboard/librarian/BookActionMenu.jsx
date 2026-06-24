@@ -30,10 +30,14 @@ const BookActionMenu = ({ book }) => {
     setLoading('unpublish')
     try {
       const res = await unpublishBook(book._id)
-      toast.success('Book unpublished.')
+      if (res?.modifiedCount > 0) {
+        toast.info('Your book has been Unpublished!')
+      } else {
+        toast.error('Failed to unpublish try again!')
+      }
       router.refresh();
     } catch {
-      toast.error('Failed to unpublish.')
+      toast.error('Failed to unpublish try again!')
     } finally {
       setLoading(null)
     }
@@ -44,10 +48,14 @@ const BookActionMenu = ({ book }) => {
     setLoading('publish')
     try {
       const res = await publishBook(book._id)
-      toast.success('Book published!')
+      if (res?.modifiedCount > 0) {
+        toast.info('Waiting for admin approval to Publish!')
+      } else {
+        toast.error('Failed to publish try again!')
+      }
       router.refresh()
     } catch {
-      toast.error('Failed to publish.')
+      toast.error('Failed to publish, try again!')
     } finally {
       setLoading(null)
     }

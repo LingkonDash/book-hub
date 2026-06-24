@@ -17,7 +17,7 @@ export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("Abc@1234");
   const [showPassword, setShowPassword] = useState(false);
-  const [agreed, setAgreed] = useState(false);
+  const [agreed, setAgreed] = useState(true);
 
   // --- Error / submit state ---
   const [errors, setErrors] = useState({});

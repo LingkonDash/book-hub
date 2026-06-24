@@ -28,7 +28,7 @@ export default function RegisterPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [role, setRole] = useState("user");
-  const [agreed, setAgreed] = useState(false);
+  const [agreed, setAgreed] = useState(true);
 
   // --- Image state ---
   const [imageFile, setImageFile] = useState(null);

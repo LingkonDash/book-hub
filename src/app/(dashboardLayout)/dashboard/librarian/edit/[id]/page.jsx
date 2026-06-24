@@ -10,7 +10,6 @@ const EditBookPage = async ({params}) => {
 
   return (
     <div>
-      hi
       <EditBookComponent book={book} />
     </div>
   );

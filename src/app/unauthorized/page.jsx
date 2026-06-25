@@ -53,7 +53,7 @@ export default function UnauthorizedPage() {
           </p>
 
           {[
-            { label: 'An active BiblioDropp account', met: false },
+            { label: 'An active BookHub account', met: false },
             { label: 'Correct role permissions (Reader / Librarian / Admin)', met: false },
             { label: 'A valid session — yours may have expired', met: false },
           ].map((item, i) => (

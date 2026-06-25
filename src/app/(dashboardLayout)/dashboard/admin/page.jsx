@@ -1,6 +1,12 @@
+import { getAdminStats } from '@/lib/api/admin/getAdminApi';
 import React from 'react';
 
-const LibrarianPage = () => {
+const AdminPage = async () => {
+
+  const adminStats = getAdminStats();
+
+  console.log(adminStats);
+
   return (
     <div>
       <h1>hi admin</h1>
@@ -8,4 +14,4 @@ const LibrarianPage = () => {
   );
 };
 
-export default LibrarianPage;
+export default AdminPage;

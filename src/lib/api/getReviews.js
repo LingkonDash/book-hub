@@ -1,4 +1,5 @@
+import { serverFetch } from "../core/server";
 
-export const getReviews = async () => {
-  return { reviews: [], avgRating: 4.2 };
+export const getReviews = async (bookId) => {
+  return serverFetch(`/reviews/${bookId}`);
 };

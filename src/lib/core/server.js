@@ -35,6 +35,7 @@ export const serverMutation = async (path, data, method = 'POST') => {
         body: JSON.stringify(data),
     });
 
+    console.log(res);
     return res.json();
 }
 

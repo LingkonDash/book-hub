@@ -8,6 +8,8 @@ import { getBookById } from '@/lib/api/getBooks';
 import { getReviews } from '@/lib/api/getReviews';
 import DeliveryModal from '@/components/browse/detailsPage/Deliverymodal';
 import ReviewSection from '@/components/browse/detailsPage/Reviewsection';
+import { getUserSession } from '@/lib/core/session';
+import { getUserDeliveries } from '@/lib/api/getUserDeliveries';
 
 // ── tiny helpers ───────────────────────────────────────────
 function Badge({ children, variant = 'default' }) {
@@ -92,9 +94,8 @@ function isBookAvailable(status) {
 export default async function BookDetailPage({ params }) {
   const { id } = await params;
 
-  // ── Auth (optional — page visible to guests, actions gated) ──
-  const session = await auth.api.getSession({ headers: await headers() });
-  const currentUser = session?.user ?? null;
+  // ── Auth (optional — page visible to guests, actions gated) ─
+  const currentUser = await getUserSession();
 
   // ── Data — fetch book and reviews in parallel ──────────
   const [book, reviewsData] = await Promise.all([
@@ -103,6 +104,12 @@ export default async function BookDetailPage({ params }) {
   ]);
 
   if (!book) notFound();
+
+  const userDeliveries = await getUserDeliveries(currentUser?.id);
+  const deliveredData = userDeliveries.deliveries.filter(d => d.status === 'delivered')
+  const canReview = !!deliveredData.find(d => d.bookId === id);
+
+  // if(book && currentUser) canReview 
 
   const {
     _id,
@@ -246,6 +253,7 @@ export default async function BookDetailPage({ params }) {
               currentUser={currentUser}
               initialReviews={initialReviews}
               initialAvgRating={avgRating}
+              canReview={canReview}
             />
           </div>
 

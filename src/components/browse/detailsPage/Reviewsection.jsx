@@ -1,19 +1,23 @@
 'use client';
 
-import { useState, useEffect, useTransition } from 'react';
+import { useState, useTransition } from 'react';
+import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { toast } from 'react-toastify';
+import { postReview } from '@/lib/action/reviewsAction/postReview';
+import { editReview } from '@/lib/action/reviewsAction/editReview';
+import { deleteReview } from '@/lib/action/reviewsAction/deleteReview';
 
 // ── Helpers ────────────────────────────────────────────────
 function timeAgo(dateStr) {
   const diff = Date.now() - new Date(dateStr).getTime();
   const m = Math.floor(diff / 60000);
-  if (m < 1)   return 'just now';
-  if (m < 60)  return `${m}m ago`;
+  if (m < 1) return 'just now';
+  if (m < 60) return `${m}m ago`;
   const h = Math.floor(m / 60);
-  if (h < 24)  return `${h}h ago`;
+  if (h < 24) return `${h}h ago`;
   const d = Math.floor(h / 24);
-  if (d < 30)  return `${d}d ago`;
+  if (d < 30) return `${d}d ago`;
   const mo = Math.floor(d / 30);
   if (mo < 12) return `${mo}mo ago`;
   return `${Math.floor(mo / 12)}y ago`;
@@ -59,7 +63,7 @@ function StarPicker({ value, onChange }) {
             viewBox="0 0 20 20"
             fill="currentColor"
           >
-            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.518 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.196-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118L2.049 10.1c-.783-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.518-4.674z"/>
+            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.518 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.196-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118L2.049 10.1c-.783-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.518-4.674z" />
           </svg>
         </button>
       ))}
@@ -71,7 +75,7 @@ function StarPicker({ value, onChange }) {
 }
 
 // ── Single review card ─────────────────────────────────────
-function ReviewCard({ review, isOwn = false }) {
+function ReviewCard({ review, isOwn = false, onEdit, onDelete, isDeleting }) {
   const { rating, comment, user, createdAt } = review;
   const stars = Array.from({ length: 5 }, (_, i) => i + 1);
 
@@ -88,7 +92,27 @@ function ReviewCard({ review, isOwn = false }) {
               </span>
             )}
           </div>
-          <span className="text-xs text-slate-400">{timeAgo(createdAt)}</span>
+          <div className="flex items-center gap-2">
+            <span className="text-xs text-slate-400">{timeAgo(createdAt)}</span>
+            {/* Edit & Delete — only on own review card */}
+            {isOwn && (
+              <>
+                <button
+                  onClick={onEdit}
+                  className="text-xs font-semibold text-[#fc4a32] hover:underline cursor-pointer"
+                >
+                  Edit
+                </button>
+                <button
+                  onClick={onDelete}
+                  disabled={isDeleting}
+                  className="text-xs font-semibold text-slate-400 hover:text-red-500 hover:underline cursor-pointer disabled:opacity-50"
+                >
+                  {isDeleting ? 'Deleting…' : 'Delete'}
+                </button>
+              </>
+            )}
+          </div>
         </div>
 
         {/* Stars */}
@@ -100,7 +124,7 @@ function ReviewCard({ review, isOwn = false }) {
               viewBox="0 0 20 20"
               fill="currentColor"
             >
-              <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.518 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.196-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118L2.049 10.1c-.783-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.518-4.674z"/>
+              <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.518 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.196-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118L2.049 10.1c-.783-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.518-4.674z" />
             </svg>
           ))}
         </div>
@@ -111,10 +135,10 @@ function ReviewCard({ review, isOwn = false }) {
   );
 }
 
-// ── Write-review form ─────────────────────────────────────
-function WriteReviewForm({ bookId, currentUser, existingReview, onReviewSubmitted }) {
+// ── Write / Edit review form ───────────────────────────────
+function WriteReviewForm({ bookId, currentUser, existingReview, onReviewSubmitted, onCancelEdit }) {
   const [isPending, startTransition] = useTransition();
-  const [rating,  setRating]  = useState(existingReview?.rating  ?? 0);
+  const [rating, setRating] = useState(existingReview?.rating ?? 0);
   const [comment, setComment] = useState(existingReview?.comment ?? '');
   const [charCount, setCharCount] = useState(existingReview?.comment?.length ?? 0);
   const MAX_CHARS = 600;
@@ -132,24 +156,42 @@ function WriteReviewForm({ bookId, currentUser, existingReview, onReviewSubmitte
 
     startTransition(async () => {
       try {
-        const url    = isEdit
-          ? `${process.env.NEXT_PUBLIC_API_URL}/reviews/${existingReview._id}`
-          : `${process.env.NEXT_PUBLIC_API_URL}/reviews`;
-        const method = isEdit ? 'PUT' : 'POST';
+        if (isEdit) {
+          // ── Edit path ──────────────────────────────────
+          const updateInfo = { rating, comment };
+          const res = await editReview(updateInfo, existingReview._id);
 
-        const res = await fetch(url, {
-          method,
-          headers: { 'Content-Type': 'application/json' },
-          credentials: 'include',
-          body: JSON.stringify({ bookId, rating, comment, userID, starGiven, }),
-        });
+          if (res?.modifiedCount > 0) {
+            toast.success('Review updated!');
+            onReviewSubmitted({ ...existingReview, rating, comment });
+          } else {
+            toast.error('No changes were saved.');
+          }
+        } else {
+          // ── Post path ──────────────────────────────────
+          const reviewInfo = {
+            bookId,
+            rating,
+            user: { _id: currentUser?.id, name: currentUser?.name, image: currentUser?.image },
+            comment,
+            userId: currentUser?.id
+          };
+          const res = await postReview(reviewInfo);
 
-        const data = await res.json();
-        if (!res.ok) throw new Error(data.message ?? 'Failed to submit review');
-
-        toast.success(isEdit ? 'Review updated!' : 'Review submitted!');
-        onReviewSubmitted(data.review);
-
+          if (res?.insertedId) {
+            toast.success('Review submitted!');
+            // Pass back a minimal review object so optimistic update works
+            onReviewSubmitted({
+              _id: res.insertedId,
+              rating,
+              comment,
+              userId: currentUser?.id,
+              user: { _id: currentUser?.id, name: currentUser?.name, image: currentUser?.image },
+            });
+          } else {
+            toast.error('Failed to submit review.');
+          }
+        }
       } catch (err) {
         toast.error(err.message || 'Something went wrong.');
       }
@@ -178,7 +220,9 @@ function WriteReviewForm({ bookId, currentUser, existingReview, onReviewSubmitte
 
       {/* Comment */}
       <div>
-        <p className="text-xs font-semibold text-slate-500 mb-2 uppercase tracking-wide">Your thoughts <span className="normal-case font-normal text-slate-400">(optional)</span></p>
+        <p className="text-xs font-semibold text-slate-500 mb-2 uppercase tracking-wide">
+          Your thoughts <span className="normal-case font-normal text-slate-400">(optional)</span>
+        </p>
         <div className="relative">
           <textarea
             rows={4}
@@ -195,33 +239,48 @@ function WriteReviewForm({ bookId, currentUser, existingReview, onReviewSubmitte
         </div>
       </div>
 
-      {/* Submit */}
-      <button
-        onClick={handleSubmit}
-        disabled={isPending || rating === 0}
-        className={`flex items-center justify-center gap-2 w-full h-11 rounded-xl font-bold text-sm transition-all cursor-pointer
-          ${isPending || rating === 0
-            ? 'bg-slate-100 text-slate-400 cursor-not-allowed'
-            : 'bg-[#fc4a32] hover:bg-[#e03e28] active:scale-[0.98] text-white shadow-[0_4px_16px_rgba(252,74,50,0.28)]'
-          }`}
-      >
-        {isPending ? (
-          <>
-            <svg className="animate-spin w-4 h-4" viewBox="0 0 24 24" fill="none">
-              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/>
-              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"/>
-            </svg>
-            {isEdit ? 'Updating…' : 'Submitting…'}
-          </>
-        ) : (
-          isEdit ? 'Update review' : 'Submit review'
+      {/* Actions */}
+      <div className="flex items-center gap-3">
+        {/* Cancel only shown in edit mode */}
+        {isEdit && onCancelEdit && (
+          <button
+            type="button"
+            onClick={onCancelEdit}
+            className="flex-1 h-11 rounded-xl border border-slate-200 font-bold text-sm text-slate-500
+              hover:bg-slate-50 active:scale-[0.98] transition-all cursor-pointer"
+          >
+            Cancel
+          </button>
         )}
-      </button>
+
+        {/* Submit / Update */}
+        <button
+          onClick={handleSubmit}
+          disabled={isPending || rating === 0}
+          className={`flex items-center justify-center gap-2 flex-1 h-11 rounded-xl font-bold text-sm transition-all cursor-pointer
+            ${isPending || rating === 0
+              ? 'bg-slate-100 text-slate-400 cursor-not-allowed'
+              : 'bg-[#fc4a32] hover:bg-[#e03e28] active:scale-[0.98] text-white shadow-[0_4px_16px_rgba(252,74,50,0.28)]'
+            }`}
+        >
+          {isPending ? (
+            <>
+              <svg className="animate-spin w-4 h-4" viewBox="0 0 24 24" fill="none">
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z" />
+              </svg>
+              {isEdit ? 'Updating…' : 'Submitting…'}
+            </>
+          ) : (
+            isEdit ? 'Update review' : 'Submit review'
+          )}
+        </button>
+      </div>
     </div>
   );
 }
 
-// ── Empty reviews ─────────────────────────────────────────
+// ── Empty reviews ──────────────────────────────────────────
 function EmptyReviews() {
   return (
     <div className="flex flex-col items-center justify-center py-12 text-center">
@@ -234,8 +293,8 @@ function EmptyReviews() {
   );
 }
 
-// ── Review list (read-only for non-eligible users) ─────────
-function ReviewList({ reviews, currentUserId }) {
+// ── Review list ────────────────────────────────────────────
+function ReviewList({ reviews, currentUserId, onEditRequest, deletingId, onDelete }) {
   const [visible, setVisible] = useState(5);
   const hasMore = visible < reviews.length;
 
@@ -244,13 +303,19 @@ function ReviewList({ reviews, currentUserId }) {
   return (
     <div>
       <div className="divide-y divide-slate-50">
-        {reviews.slice(0, visible).map((review) => (
-          <ReviewCard
-            key={review._id}
-            review={review}
-            isOwn={review.user?._id === currentUserId || review.userId === currentUserId}
-          />
-        ))}
+        {reviews.slice(0, visible).map((review) => {
+          const isOwn = review.user?._id === currentUserId || review.userId === currentUserId;
+          return (
+            <ReviewCard
+              key={review._id}
+              review={review}
+              isOwn={isOwn}
+              onEdit={() => onEditRequest(review)}
+              onDelete={() => onDelete(review._id)}
+              isDeleting={deletingId === review._id}
+            />
+          );
+        })}
       </div>
       {hasMore && (
         <button
@@ -271,8 +336,8 @@ function LockedReviewPrompt({ isGuest }) {
     <div className="flex items-start gap-3 p-4 rounded-2xl bg-slate-50 border border-dashed border-slate-200">
       <div className="w-9 h-9 rounded-full bg-slate-200 flex items-center justify-center shrink-0">
         <svg className="w-4 h-4 text-slate-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-          <rect x="3" y="11" width="18" height="11" rx="2"/>
-          <path d="M7 11V7a5 5 0 0110 0v4"/>
+          <rect x="3" y="11" width="18" height="11" rx="2" />
+          <path d="M7 11V7a5 5 0 0110 0v4" />
         </svg>
       </div>
       <div>
@@ -289,66 +354,63 @@ function LockedReviewPrompt({ isGuest }) {
   );
 }
 
-// ── Root export ───────────────────────────────────────────
-// Props:
-//   bookId          — string, the book's _id
-//   currentUser     — session user object or null
-//   initialReviews  — reviews array pre-fetched on the server (avoids waterfall)
-//   initialAvgRating— average rating pre-computed on the server
-export default function ReviewSection({ bookId, currentUser, initialReviews = [], initialAvgRating = 0 }) {
-  // ── State — seeded from SSR props ──────────────────────
-  const [reviews,        setReviews]        = useState(initialReviews);
-  const [avgRating,      setAvgRating]      = useState(initialAvgRating);
-  const [canReview,      setCanReview]      = useState(false);   // has a delivered copy
-  const [existingReview, setExistingReview] = useState(null);    // already reviewed?
-  const [eligLoading,    setEligLoading]    = useState(Boolean(currentUser)); // only wait for eligibility
+// ── Root export ────────────────────────────────────────────
+export default function ReviewSection({ bookId, currentUser, initialReviews = [], initialAvgRating = 0, canReview }) {
+  const router = useRouter();
 
-  const currentUserId = currentUser?._id ?? currentUser?.id ?? null;
+  const [reviews, setReviews] = useState(initialReviews);
+  const [avgRating, setAvgRating] = useState(initialAvgRating);
+  const [editingReview, setEditingReview] = useState(null);   // review object being edited
+  const [deletingId, setDeletingId] = useState(null);   // _id of review being deleted
 
-  // ── Fetch eligibility only (reviews already loaded via SSR) ─
-  useEffect(() => {
-    if (!currentUser) {
-      setEligLoading(false);
-      return;
-    }
+  const currentUserId = currentUser?.id ?? null;
+  const userReview = reviews.find((r) => r.user?._id === currentUserId || r.userId === currentUserId);
+  const hasReviewed = Boolean(userReview);
 
-    async function checkEligibility() {
-      setEligLoading(true);
-      try {
-        const eligRes = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/reviews/eligibility/${bookId}`,
-          { credentials: 'include' }
-        );
-        const eligData = await eligRes.json();
-        setCanReview(eligData.canReview ?? false);
-        setExistingReview(eligData.existingReview ?? null);
-      } catch (err) {
-        console.error('Failed to check review eligibility', err);
-      } finally {
-        setEligLoading(false);
-      }
-    }
+  // ── Recalculate avg after change ───────────────────────
+  function recalcAvg(updatedList) {
+    if (updatedList.length === 0) { setAvgRating(0); return; }
+    const total = updatedList.reduce((sum, r) => sum + r.rating, 0);
+    setAvgRating(total / updatedList.length);
+  }
 
-    checkEligibility();
-  }, [bookId, currentUser]);
-
-  // ── After writing/editing, patch the list optimistically ─
+  // ── After posting / editing ────────────────────────────
   function handleReviewSubmitted(updatedReview) {
-    setExistingReview(updatedReview);
+    setEditingReview(null);
     setReviews((prev) => {
       const idx = prev.findIndex((r) => r._id === updatedReview._id);
-      if (idx !== -1) {
-        const next = [...prev];
-        next[idx] = updatedReview;
-        return next;
+      const next = idx !== -1
+        ? prev.map((r) => r._id === updatedReview._id ? updatedReview : r)
+        : [updatedReview, ...prev];
+      recalcAvg(next);
+      return next;
+    });
+    router.refresh();
+  }
+
+  // ── Delete ─────────────────────────────────────────────
+  async function handleDelete(reviewId) {
+    setDeletingId(reviewId);
+    try {
+      console.log(reviewId);
+      const res = await deleteReview(reviewId)
+
+      if (res.deletedCount > 0) {
+        toast.success('Review deleted.');
+        setReviews((prev) => {
+          const next = prev.filter((r) => r._id !== reviewId);
+          recalcAvg(next);
+          return next;
+        });
+        router.refresh();
+      } else {
+        toast.error('Could not delete review.');
       }
-      return [updatedReview, ...prev];
-    });
-    // Recalculate avg locally (rough)
-    setAvgRating(() => {
-      const total = reviews.reduce((sum, r) => sum + r.rating, 0) + updatedReview.rating;
-      return total / (reviews.length + (existingReview ? 0 : 1));
-    });
+    } catch (err) {
+      toast.error(err.message || 'Something went wrong.');
+    } finally {
+      setDeletingId(null);
+    }
   }
 
   // ── Rating summary bar ─────────────────────────────────
@@ -365,9 +427,9 @@ export default function ReviewSection({ bookId, currentUser, initialReviews = []
         <div className="text-center shrink-0">
           <p className="text-4xl font-black text-slate-900">{avgRating.toFixed(1)}</p>
           <div className="flex justify-center gap-0.5 mt-1">
-            {[1,2,3,4,5].map((n) => (
+            {[1, 2, 3, 4, 5].map((n) => (
               <svg key={n} className={`w-3 h-3 ${n <= Math.round(avgRating) ? 'text-amber-400' : 'text-slate-200'}`} viewBox="0 0 20 20" fill="currentColor">
-                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.518 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.196-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118L2.049 10.1c-.783-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.518-4.674z"/>
+                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.518 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.196-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118L2.049 10.1c-.783-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.518-4.674z" />
               </svg>
             ))}
           </div>
@@ -395,26 +457,6 @@ export default function ReviewSection({ bookId, currentUser, initialReviews = []
     );
   }
 
-  // ── Skeleton — only shown while eligibility loads ──────
-  if (eligLoading) {
-    return (
-      <div className="space-y-5 animate-pulse">
-        <div className="h-5 w-32 bg-slate-200 rounded-full" />
-        <div className="h-24 bg-slate-100 rounded-2xl" />
-        {[1,2,3].map((i) => (
-          <div key={i} className="flex gap-3 py-4 border-b border-slate-100">
-            <div className="w-9 h-9 rounded-full bg-slate-200 shrink-0" />
-            <div className="flex-1 space-y-2">
-              <div className="h-3.5 bg-slate-200 rounded-full w-1/3" />
-              <div className="h-3 bg-slate-100 rounded-full w-1/2" />
-              <div className="h-3 bg-slate-100 rounded-full w-3/4" />
-            </div>
-          </div>
-        ))}
-      </div>
-    );
-  }
-
   return (
     <div className="space-y-6">
       <h2 className="text-lg font-bold text-slate-900">
@@ -424,20 +466,30 @@ export default function ReviewSection({ bookId, currentUser, initialReviews = []
       {/* Rating summary — shown when there are reviews */}
       {reviews.length > 0 && <RatingSummary />}
 
-      {/* ── Write a review OR locked prompt ── */}
+      {/* ── Write / Edit form OR locked prompt ── */}
       {canReview ? (
-        <WriteReviewForm
-          bookId={bookId}
-          currentUser={currentUser}
-          existingReview={existingReview}
-          onReviewSubmitted={handleReviewSubmitted}
-        />
+        // Show form only if user hasn't reviewed yet, OR if they're actively editing
+        !hasReviewed || editingReview ? (
+          <WriteReviewForm
+            bookId={bookId}
+            currentUser={currentUser}
+            existingReview={editingReview ?? null}
+            onReviewSubmitted={handleReviewSubmitted}
+            onCancelEdit={editingReview ? () => setEditingReview(null) : null}
+          />
+        ) : null  // user already reviewed — their card has Edit button instead
       ) : (
         <LockedReviewPrompt isGuest={!currentUser} />
       )}
 
       {/* ── Review list ── */}
-      <ReviewList reviews={reviews} currentUserId={currentUserId} />
+      <ReviewList
+        reviews={reviews}
+        currentUserId={currentUserId}
+        onEditRequest={(review) => setEditingReview(review)}
+        deletingId={deletingId}
+        onDelete={handleDelete}
+      />
     </div>
   );
 }

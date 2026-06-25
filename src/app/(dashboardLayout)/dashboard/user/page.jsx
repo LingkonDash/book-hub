@@ -18,7 +18,6 @@ const UserPage = async () => {
   const pendingDeliveries = deliveries.filter(
     (d) => d.deliveryStatus === 'pending' || d.deliveryStatus === 'dispatched'
   ).length;
-  console.log(deliveries);
   const recentDeliveries = deliveries.slice(0, 5);
 
   const stats = [
@@ -53,7 +52,7 @@ const UserPage = async () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#fad4de]/30 via-white to-white p-4 sm:p-6 md:p-8 pt-16 md:pt-6 mx-auto transition-colors duration-300">
+    <div className="min-h-screen bg-gradient-to-b from-[#fad4de]/30 via-white to-white p-4 sm:p-6 md:p-8 pt-6 md:pt-18 lg:pt-6 mx-auto transition-colors duration-300">
       <div className="mx-auto space-y-8">
         {/* Hero banner */}
         <div className="relative overflow-hidden bg-primary rounded-2xl p-6 sm:p-8 flex items-center justify-between shadow-lg shadow-primary/10">
@@ -80,13 +79,13 @@ const UserPage = async () => {
         </div>
 
         {/* Greeting / Context header */}
-        <div className="border-b border-gray-100 pb-4">
+        {/* <div className="border-b border-gray-100 pb-4">
           <p className="text-xs text-gray-400 uppercase tracking-widest font-semibold mb-0.5">Overview</p>
           <h1 className="text-2xl font-bold text-gray-900 tracking-tight">
             Welcome back, {user?.name?.split(' ')[0] || 'Reader'}
           </h1>
           <p className="text-sm text-gray-500">Heres a snapshot of your reading activity.</p>
-        </div>
+        </div> */}
 
         {/* Quick stats container */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">

@@ -21,11 +21,13 @@ import {
 } from "react-icons/md";
 import { BiBookOpen } from "react-icons/bi";
 import { toast } from "react-toastify";
+import { FaBookReader } from "react-icons/fa";
 
 // ─── Nav Definitions ───────────────────────────────────────────────
 const userNavItems = [
   { label: "Overview", href: "/dashboard/user", icon: MdDashboard },
   { label: "My Deliveries", href: "/dashboard/user/my-deliveries", icon: MdLocalShipping },
+  { label: "My Reading list", href: "/dashboard/user/my-readinglist", icon: FaBookReader },
   { label: "My Reviews", href: "/dashboard/user/my-reviews", icon: MdStar },
   { label: "Profile", href: "/dashboard/profile", icon: MdPerson },
 ];

@@ -19,6 +19,8 @@ export const protectedServerFetch = async (path) => {
         }
     );
     const data = await res.json()
+
+    console.log(data, 'protectionFetch');
     return data;
 }
 
@@ -35,7 +37,7 @@ export const serverMutation = async (path, data, method = 'POST') => {
         body: JSON.stringify(data),
     });
 
-    console.log(res);
+    console.log(res, method, 'call');
     return res.json();
 }
 

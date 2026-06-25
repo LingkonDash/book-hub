@@ -11,8 +11,8 @@ const CARD_STEP = CARD_WIDTH + CARD_GAP;
 const AUTO_INTERVAL = 2200;
 
 
-export default function BestSeller( {featuredBooks} ) {
-  
+export default function BestSeller({ featuredBooks }) {
+
   // Triple-clone the list so we can jump seamlessly
   const tripled = [...featuredBooks, ...featuredBooks, ...featuredBooks];
 
@@ -90,6 +90,11 @@ export default function BestSeller( {featuredBooks} ) {
 
   // Pointer drag handlers (works on mouse + touch for desktop grab feel)
   const onPointerDown = (e) => {
+
+    if ((e.target).closest('a') || (e.target).closest('button')) {
+      return;
+    }
+
     isDragging.current = true;
     dragStartX.current = e.clientX;
     dragStartMotionX.current = x.get();
@@ -118,6 +123,11 @@ export default function BestSeller( {featuredBooks} ) {
 
   // Add these touch handlers
   const onTouchStart = (e) => {
+
+    if ((e.target).closest('a') || (e.target).closest('button')) {
+      return;
+    }
+
     touchStartX.current = e.touches[0].clientX;
     touchStartMotionX.current = x.get();
     stopAuto();
@@ -264,7 +274,7 @@ export default function BestSeller( {featuredBooks} ) {
             className={`select-none ${isDragging.current ? 'cursor-grabbing' : 'cursor-grab'}`}
           >
             {tripled.map((book, index) => {
-              const isAvailable = book.status.stage === "Available";
+              const isAvailable = true
               // Only animate entrance for the first render pass of the middle clone
               const isMiddleSet = index >= featuredBooks.length && index < featuredBooks.length * 2;
 
@@ -294,7 +304,7 @@ export default function BestSeller( {featuredBooks} ) {
                         animate={{ opacity: [1, 0.3, 1] }}
                         transition={{ duration: 1.6, repeat: Infinity, ease: "easeInOut" }}
                       />
-                      {isAvailable ? `${book.status.count} Available` : 'Checked Out'}
+                      {isAvailable ? `Available` : 'Available'}
                     </span>
 
                     <span className="absolute top-3 right-3 z-10 bg-slate-900/70 text-white text-[10px] font-extrabold uppercase tracking-wider px-2 py-1 rounded-md backdrop-blur-xs">
@@ -347,7 +357,7 @@ export default function BestSeller( {featuredBooks} ) {
                         </span>
                       </div>
 
-                      <motion.div whileTap={{ scale: 0.95 }}>
+                      <div onClick={() => console.log('button clicked!')}>
                         <Link
                           href={`/browse/${book._id}`}
                           className="inline-flex items-center justify-center gap-1.5 px-4 py-2 bg-primary hover:bg-primary/90 text-white text-xs font-bold rounded-xl transition-colors duration-150 shadow-sm shadow-primary/10"
@@ -355,7 +365,7 @@ export default function BestSeller( {featuredBooks} ) {
                           <FiBookOpen className="w-3.5 h-3.5" />
                           <span>Details</span>
                         </Link>
-                      </motion.div>
+                      </div>
                     </div>
                   </div>
                 </motion.div>
@@ -365,6 +375,6 @@ export default function BestSeller( {featuredBooks} ) {
         </div>
 
       </div>
-    </section>
+    </section >
   );
 }

@@ -141,7 +141,7 @@ function DeliveryRow({ delivery }) {
     startTransition(async () => {
       try {
         // 1. Await the response from your backend API
-        const response = await updateDeliveryStatus(delivery._id, nextStatus);
+        const response = await updateDeliveryStatus(delivery?._id, nextStatus, delivery?.bookId);
 
         // 2. Use the exact message from the backend if available, or fallback to your default
         const successMsg = response?.message || `Delivery status updated to ${nextStatus}`;

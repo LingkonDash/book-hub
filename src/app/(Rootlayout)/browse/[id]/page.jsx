@@ -2,14 +2,13 @@
 
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
-import { auth } from '@/lib/auth';
-import { headers } from 'next/headers';
 import { getBookById } from '@/lib/api/getBooks';
 import { getReviews } from '@/lib/api/getReviews';
 import DeliveryModal from '@/components/browse/detailsPage/Deliverymodal';
 import ReviewSection from '@/components/browse/detailsPage/Reviewsection';
 import { getUserSession } from '@/lib/core/session';
 import { getUserDeliveries } from '@/lib/api/getUserDeliveries';
+import LibrarianControls from '@/components/browse/detailsPage/LibrarianControls';
 
 // ── tiny helpers ───────────────────────────────────────────
 function Badge({ children, variant = 'default' }) {
@@ -105,8 +104,11 @@ export default async function BookDetailPage({ params }) {
 
   if (!book) notFound();
 
+  const isOwnerOfThisBook = currentUser?.id === book?.librarianId;
+  console.log(isOwnerOfThisBook);
+
   const userDeliveries = await getUserDeliveries(currentUser?.id);
-  const deliveredData = userDeliveries.deliveries.filter(d => d.status === 'delivered')
+  const deliveredData = userDeliveries.deliveries.filter(d => d.deliveryStatus === 'delivered')
   const canReview = !!deliveredData.find(d => d.bookId === id);
 
   // if(book && currentUser) canReview 
@@ -180,7 +182,12 @@ export default async function BookDetailPage({ params }) {
                 {category && <Badge variant="primary">{category}</Badge>}
               </div>
 
-              {/* Title + author */}
+              {/* Librarian controls — only rendered when the signed-in user owns this book */}
+              {isOwnerOfThisBook && (
+                <div className="p-3 rounded-xl bg-slate-50 border border-slate-200">
+                  <LibrarianControls book={book} />
+                </div>
+              )}
               <div>
                 <h1 className="text-3xl lg:text-4xl font-bold text-slate-900 leading-tight tracking-tight">
                   {title}
@@ -254,6 +261,7 @@ export default async function BookDetailPage({ params }) {
               initialReviews={initialReviews}
               initialAvgRating={avgRating}
               canReview={canReview}
+              book={book}
             />
           </div>
 

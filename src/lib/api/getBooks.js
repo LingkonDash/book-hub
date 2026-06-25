@@ -8,6 +8,7 @@ export const getBooks = async (queryString) =>{
 
 //Get single book
 export const getBookById = async (bookId) => {
+    
     return serverFetch(`/books/${bookId}`);
 }
 

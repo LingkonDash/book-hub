@@ -18,6 +18,7 @@ export function DeleteBookModal({ book }) {
         toast.error('Failed to delete. Try again!');
       }
       router.refresh();
+      router.push('/dashboard/librarian/my-books');
     } catch {
       toast.error('Failed to delete.');
     }

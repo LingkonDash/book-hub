@@ -23,7 +23,7 @@ function timeAgo(dateStr) {
   return `${Math.floor(mo / 12)}y ago`;
 }
 
-function Avatar({ name = '', src, size = 36 }) {
+export function Avatar({ name = '', src, size = 36 }) {
   const initials = name.split(' ').map((w) => w[0]).join('').slice(0, 2).toUpperCase();
   const colors = ['bg-violet-100 text-violet-700', 'bg-teal-100 text-teal-700', 'bg-amber-100 text-amber-700', 'bg-rose-100 text-rose-700', 'bg-sky-100 text-sky-700'];
   const color = colors[name.charCodeAt(0) % colors.length];
@@ -43,7 +43,7 @@ function Avatar({ name = '', src, size = 36 }) {
 }
 
 // ── Star picker ────────────────────────────────────────────
-function StarPicker({ value, onChange }) {
+export function StarPicker({ value, onChange }) {
   const [hover, setHover] = useState(0);
   const display = hover || value;
   return (
@@ -136,7 +136,7 @@ function ReviewCard({ review, isOwn = false, onEdit, onDelete, isDeleting }) {
 }
 
 // ── Write / Edit review form ───────────────────────────────
-function WriteReviewForm({ bookId, currentUser, existingReview, onReviewSubmitted, onCancelEdit }) {
+function WriteReviewForm({ bookId, currentUser, existingReview, onReviewSubmitted, onCancelEdit, book }) {
   const [isPending, startTransition] = useTransition();
   const [rating, setRating] = useState(existingReview?.rating ?? 0);
   const [comment, setComment] = useState(existingReview?.comment ?? '');
@@ -171,6 +171,9 @@ function WriteReviewForm({ bookId, currentUser, existingReview, onReviewSubmitte
           // ── Post path ──────────────────────────────────
           const reviewInfo = {
             bookId,
+            bookTitle: book?.title,
+            bookAuthor: book?.author,
+            coverImage: book?.coverImage,
             rating,
             user: { _id: currentUser?.id, name: currentUser?.name, image: currentUser?.image },
             comment,
@@ -225,6 +228,7 @@ function WriteReviewForm({ bookId, currentUser, existingReview, onReviewSubmitte
         </p>
         <div className="relative">
           <textarea
+            required
             rows={4}
             placeholder="What did you think of this book?"
             value={comment}
@@ -355,7 +359,7 @@ function LockedReviewPrompt({ isGuest }) {
 }
 
 // ── Root export ────────────────────────────────────────────
-export default function ReviewSection({ bookId, currentUser, initialReviews = [], initialAvgRating = 0, canReview }) {
+export default function ReviewSection({ bookId, currentUser, initialReviews = [], initialAvgRating = 0, canReview, book }) {
   const router = useRouter();
 
   const [reviews, setReviews] = useState(initialReviews);
@@ -476,6 +480,7 @@ export default function ReviewSection({ bookId, currentUser, initialReviews = []
             existingReview={editingReview ?? null}
             onReviewSubmitted={handleReviewSubmitted}
             onCancelEdit={editingReview ? () => setEditingReview(null) : null}
+            book={book}
           />
         ) : null  // user already reviewed — their card has Edit button instead
       ) : (

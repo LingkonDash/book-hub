@@ -60,7 +60,7 @@ const MyBooksTable = ({ initialBooks, isAdmin = false }) => {
                 {/* Mobile Details Text Wrapper */}
                 <div className="flex-1 min-w-0 pr-6">
                   <h3 className="font-semibold text-gray-800 text-sm truncate">{book.title}</h3>
-                  <p className="text-xs text-gray-400 truncate mb-2">{book.author}</p>
+                  <p className="text-xs text-gray-400 truncate mb-2">{book.librarianEmail}</p>
 
                   <div className="flex flex-wrap items-center gap-1.5 mt-1">
                     <span className="text-[10px] text-gray-500 bg-white border border-gray-200 px-2 py-0.5 rounded-full font-medium uppercase tracking-wider">
@@ -146,7 +146,7 @@ const BookRow = ({ book, isAdmin }) => (
     {/* Title + Author */}
     <td className="px-4 py-3">
       <p className="font-medium text-gray-800 leading-tight line-clamp-1">{book.title}</p>
-      <p className="text-xs text-gray-400 mt-0.5 line-clamp-1">{book.author}</p>
+      <p className="text-xs text-gray-400 mt-0.5 line-clamp-1">{book.librarianEmail}</p>
     </td>
 
     {/* Category */}

@@ -91,7 +91,7 @@ const BookActionMenuAdmin = ({ book, isAdmin }) => {
 
           {/* Edit */}
           <button
-            onClick={() => { setOpen(false); router.push(`/dashboard/librarian/edit/${book._id}`) }}
+            onClick={() => { setOpen(false); router.push(`/dashboard/admin/edit/${book._id}`) }}
             className="w-full flex items-center gap-2.5 px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors cursor-pointer"
           >
             <TiEdit className="w-4 h-4 text-gray-400" />

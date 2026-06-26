@@ -15,9 +15,6 @@ const AdminPage = async () => {
   const books = await getAllBooks();
   const transactions = await getAllTransactions();
 
-  // For chart — we need deliveries too; pass empty array if not available
-  const deliveries = books.flatMap((b) => []).slice(0, 0); // placeholder if no delivery fetch
-
   const {
     totalUsers,
     totalBooks,

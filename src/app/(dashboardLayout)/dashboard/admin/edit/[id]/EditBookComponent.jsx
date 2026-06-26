@@ -83,7 +83,7 @@ const EditBookComponent = ({ book }) => {
 
       if (res?.modifiedCount > 0) {
         toast.success("Book updated successfully!");
-        router.push('/dashboard/librarian/my-books');
+        router.push('/dashboard/admin/manage-books');
       } else {
         toast.info("No changes were saved.");
       }

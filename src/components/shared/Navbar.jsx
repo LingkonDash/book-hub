@@ -363,7 +363,7 @@ export default function Navbar({ session }) {
                         <FiGrid /> Dashboard
                       </Link>
                       <Link
-                        href="/profile"
+                        href="/dashboard/profile"
                         onClick={() => setIsMobileMenuOpen(false)}
                         className="flex items-center gap-2 py-2 text-base font-bold opacity-90 hover:opacity-100"
                       >
@@ -372,6 +372,7 @@ export default function Navbar({ session }) {
                       <button
                         onClick={() => {
                           setIsMobileMenuOpen(false);
+                          handleLogout();
                         }}
                         className="w-full flex items-center gap-2 py-2 text-base font-bold text-rose-300 text-left"
                       >
@@ -379,7 +380,7 @@ export default function Navbar({ session }) {
                       </button>
                     </div>
                   ) : (
-                    <div className="pt-2 md:hidden">
+                    <div className="pt-2">
                       <Link
                         href="/login"
                         onClick={() => setIsMobileMenuOpen(false)}

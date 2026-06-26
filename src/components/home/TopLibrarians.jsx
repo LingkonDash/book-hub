@@ -247,7 +247,6 @@ export default function TopLibrarians({ librarians }) {
           })}
         </motion.div>
 
-        {/* Footer */}
         <motion.div
           initial={{ opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}

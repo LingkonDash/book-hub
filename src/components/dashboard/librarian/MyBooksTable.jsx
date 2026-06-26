@@ -5,17 +5,18 @@ import Image from 'next/image'
 import BookStatusBadge from './BookStatusBadge'
 import BookActionMenu from './BookActionMenu'
 import { TiBook } from 'react-icons/ti'
+import BookActionMenuAdmin from '../admin/BookActionMenuAdmin'
 
 const COLUMNS = [
-  { key: 'cover',   label: '',          width: 'w-14' },
-  { key: 'title',   label: 'Title',     width: 'w-auto' },
-  { key: 'category',label: 'Category',  width: 'w-32' },
-  { key: 'fee',     label: 'Fee',       width: 'w-24' },
-  { key: 'status',  label: 'Status',    width: 'w-28' },
-  { key: 'actions', label: 'Actions',   width: 'w-16' },
+  { key: 'cover', label: '', width: 'w-14' },
+  { key: 'title', label: 'Title', width: 'w-auto' },
+  { key: 'category', label: 'Category', width: 'w-32' },
+  { key: 'fee', label: 'Fee', width: 'w-24' },
+  { key: 'status', label: 'Status', width: 'w-28' },
+  { key: 'actions', label: 'Actions', width: 'w-16' },
 ]
 
-const MyBooksTable = ({ initialBooks }) => {
+const MyBooksTable = ({ initialBooks, isAdmin = false }) => {
   const [books, setBooks] = useState(initialBooks)
 
   // Sync state cleanly whenever router.refresh() yields updated server arrays
@@ -38,7 +39,7 @@ const MyBooksTable = ({ initialBooks }) => {
           <div className="md:hidden divide-y divide-gray-100 p-2 space-y-3">
             {books?.map((book) => (
               <div key={book._id} className="p-3 bg-gray-50/50 rounded-xl border border-gray-100 flex gap-4 items-start relative">
-                
+
                 {/* Mobile Cover image container */}
                 <div className="w-16 h-22 rounded-md overflow-hidden bg-[#fad4de] flex-shrink-0 relative shadow-sm">
                   {book.coverImage ? (
@@ -60,7 +61,7 @@ const MyBooksTable = ({ initialBooks }) => {
                 <div className="flex-1 min-w-0 pr-6">
                   <h3 className="font-semibold text-gray-800 text-sm truncate">{book.title}</h3>
                   <p className="text-xs text-gray-400 truncate mb-2">{book.author}</p>
-                  
+
                   <div className="flex flex-wrap items-center gap-1.5 mt-1">
                     <span className="text-[10px] text-gray-500 bg-white border border-gray-200 px-2 py-0.5 rounded-full font-medium uppercase tracking-wider">
                       {book.category}
@@ -77,7 +78,11 @@ const MyBooksTable = ({ initialBooks }) => {
 
                 {/* Mobile Floating Actions Absolute Anchor */}
                 <div className="absolute top-2 right-2">
-                  <BookActionMenu book={book} />
+                  {isAdmin === true ?
+                    <BookActionMenuAdmin book={book} isAdmin={isAdmin} />
+                    :
+                    <BookActionMenu book={book} />
+                  }
                 </div>
               </div>
             ))}
@@ -91,9 +96,8 @@ const MyBooksTable = ({ initialBooks }) => {
                   {COLUMNS.map((col) => (
                     <th
                       key={col.key}
-                      className={`${col.width} px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-400 ${
-                        col.key === 'actions' ? 'text-right' : ''
-                      }`}
+                      className={`${col.width} px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-400 ${col.key === 'actions' ? 'text-right' : ''
+                        }`}
                     >
                       {col.label}
                     </th>
@@ -106,6 +110,7 @@ const MyBooksTable = ({ initialBooks }) => {
                   <BookRow
                     key={book._id}
                     book={book}
+                    isAdmin={isAdmin}
                   />
                 ))}
               </tbody>
@@ -117,7 +122,7 @@ const MyBooksTable = ({ initialBooks }) => {
   )
 }
 
-const BookRow = ({ book }) => (
+const BookRow = ({ book, isAdmin }) => (
   <tr className="hover:bg-gray-50/60 transition-colors group">
     {/* Cover */}
     <td className="px-4 py-3 w-14">
@@ -165,7 +170,11 @@ const BookRow = ({ book }) => (
 
     {/* Actions */}
     <td className="px-4 py-3 w-16 text-right overflow-visible">
-      <BookActionMenu book={book} />
+      {isAdmin ?
+        <BookActionMenuAdmin book={book} isAdmin={isAdmin} />
+        :
+        <BookActionMenu book={book} />
+      }
     </td>
   </tr>
 )

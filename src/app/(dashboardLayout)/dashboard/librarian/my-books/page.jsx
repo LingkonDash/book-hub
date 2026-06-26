@@ -3,12 +3,10 @@ import MyBooksTable from '@/components/dashboard/librarian/MyBooksTable'
 import { getLibrarianBooks } from '@/lib/api/librarian/getLibrarianBooks'
 import { getUserSession } from '@/lib/core/session'
 
-const MyBookPage = async ({ searchParams }) => {
+const MyBookPage = async () => {
   const user = await getUserSession()
-  const params = await searchParams
-  const page = Number(params?.page) || 1
 
-  const { books, totalPage, currentPage } = await getLibrarianBooks(user?.id, page ? `page=${page}` : null)
+  const { books } = await getLibrarianBooks(user?.id)
 
   return (
     <div className="min-h-screen bg-gray-50 p-6 md:p-8">
@@ -25,9 +23,6 @@ const MyBookPage = async ({ searchParams }) => {
 
         <MyBooksTable
           initialBooks={books}
-          totalPage={totalPage}
-          currentPage={currentPage}
-          librarianId={user?.id}
         />
       </div>
     </div>

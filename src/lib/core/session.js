@@ -24,7 +24,7 @@ export default getJwtToken;
 export const requireRole = async (role) => {
     const user = await getUserSession()
     if (!user) {
-        redirect('/auth/signin')
+        redirect('/login')
     }
     if (user?.userRole !== role) {
         redirect('/unauthorized')

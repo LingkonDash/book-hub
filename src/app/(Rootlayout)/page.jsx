@@ -8,12 +8,14 @@ import HowItWorks from "@/components/home/HowItWorks";
 import ContactSection from "@/components/home/Contact";
 import TopLibrarians from "@/components/home/TopLibrarians";
 import { getFeaturedBooks } from "@/lib/api/getBooks";
+import { getTopLibrarians } from "@/lib/api/getTopLibrarians";
 
 
 
 export default async function Home() {
 
   const featuredBooks = await getFeaturedBooks()
+  const librarians = await getTopLibrarians();
 
   return (
     <>
@@ -21,7 +23,7 @@ export default async function Home() {
       <BenefitsMarquee />
       <CategoryBrowse />
       <BestSeller featuredBooks={featuredBooks} />
-      <TopLibrarians />
+      <TopLibrarians librarians={librarians} />
       <PopularSection />
       <HowItWorks />
       <ContactSection />

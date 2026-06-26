@@ -48,7 +48,7 @@ const CategoryBrowse = () => {
           return (
             <Link 
               key={category.id} 
-              href={`/browse?cat=${category.slug}`}
+              href={`/browse?category=${category.slug}`}
               className="group relative flex items-center gap-4 p-5 rounded-xl border border-zinc-200/80 dark:border-zinc-800 bg-white dark:bg-zinc-900 transition-all duration-200 hover:z-10 hover:border-primary/40 hover:shadow-md hover:shadow-primary/5 active:scale-[0.98] block"
             >
               {/* Icon Container with Primary Accent Color Mixes */}

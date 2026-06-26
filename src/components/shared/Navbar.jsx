@@ -39,7 +39,7 @@ export default function Navbar({ session }) {
 
   const handleLogout = async () => {
     const data = await authClient.signOut();
-    console.log(data);
+    
     if (!data?.success) {
       toast.success('Signout Successful!')
       router.push('/login');
@@ -356,7 +356,7 @@ export default function Navbar({ session }) {
                   {session ? (
                     <div className="space-y-2 pt-1">
                       <Link
-                        href={getDashboardPath(session.user.role)}
+                        href={getDashboardPath(session?.user?.userRole)}
                         onClick={() => setIsMobileMenuOpen(false)}
                         className="flex items-center gap-2 py-2 text-base font-bold opacity-90 hover:opacity-100"
                       >

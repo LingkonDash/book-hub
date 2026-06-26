@@ -2,42 +2,7 @@
 
 import { motion } from "framer-motion";
 import { FiPackage, FiStar, FiAward, FiTrendingUp } from "react-icons/fi";
-
-const librarians = [
-  {
-    id: 1,
-    name: "Ayesha Rahman",
-    avatar: "https://api.dicebear.com/9.x/avataaars/svg?seed=Ayesha&backgroundColor=fad4de",
-    location: "Dhaka, BD",
-    deliveries: 312,
-    rating: 4.9,
-    specialty: "Classic Literature",
-    badge: "🥇",
-    rank: 1,
-  },
-  {
-    id: 2,
-    name: "Tanvir Hossain",
-    avatar: "https://api.dicebear.com/9.x/avataaars/svg?seed=Tanvir&backgroundColor=fcd5ce",
-    location: "Chittagong, BD",
-    deliveries: 274,
-    rating: 4.8,
-    specialty: "Sci-Fi & Fantasy",
-    badge: "🥈",
-    rank: 2,
-  },
-  {
-    id: 3,
-    name: "Priya Chowdhury",
-    avatar: "https://api.dicebear.com/9.x/avataaars/svg?seed=Priya&backgroundColor=fce4ec",
-    location: "Sylhet, BD",
-    deliveries: 198,
-    rating: 4.7,
-    specialty: "Self-Help & Growth",
-    badge: "🥉",
-    rank: 3,
-  },
-];
+import { TbUser } from "react-icons/tb";
 
 const rankConfig = {
   1: {
@@ -47,7 +12,6 @@ const rankConfig = {
     labelText: "#fff",
     cardBg: "bg-white dark:bg-slate-900",
     cardBorder: "border-[#fc4a32]/40",
-    scale: "scale-105",
     avatarSize: "w-24 h-24 sm:w-28 sm:h-28",
   },
   2: {
@@ -57,7 +21,6 @@ const rankConfig = {
     labelText: "#7c2d3d",
     cardBg: "bg-white dark:bg-slate-900",
     cardBorder: "border-slate-200 dark:border-slate-800",
-    scale: "",
     avatarSize: "w-20 h-20 sm:w-24 sm:h-24",
   },
   3: {
@@ -67,12 +30,10 @@ const rankConfig = {
     labelText: "#7c2d3d",
     cardBg: "bg-white dark:bg-slate-900",
     cardBorder: "border-slate-200 dark:border-slate-800",
-    scale: "",
     avatarSize: "w-20 h-20 sm:w-24 sm:h-24",
   },
 };
 
-// Stagger parent
 const container = {
   hidden: {},
   visible: {
@@ -80,7 +41,6 @@ const container = {
   },
 };
 
-// Each card
 const cardVariant = {
   hidden: { opacity: 0, y: 48, scale: 0.95 },
   visible: {
@@ -91,7 +51,6 @@ const cardVariant = {
   },
 };
 
-// Avatar ring pulse for rank 1
 const pulseRing = {
   animate: {
     boxShadow: [
@@ -102,7 +61,14 @@ const pulseRing = {
   },
 };
 
-export default function TopLibrarians() {
+export default function TopLibrarians({ librarians }) {
+  // Reorder: [rank2, rank1, rank3] so rank 1 sits in the middle column
+  const sorted = librarians.length === 3
+    ? [librarians[1], librarians[0], librarians[2]]
+    : librarians;
+
+  const maxDeliveries = librarians[0]?.deliveries || 1;
+
   return (
     <section className="w-full py-16 bg-white dark:bg-slate-950 overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -140,7 +106,7 @@ export default function TopLibrarians() {
           </motion.p>
         </div>
 
-        {/* Cards Grid */}
+        {/* Cards — items-end so rank1 (taller due to scale) aligns at bottom */}
         <motion.div
           variants={container}
           initial="hidden"
@@ -148,7 +114,7 @@ export default function TopLibrarians() {
           viewport={{ once: true, margin: "0px -60px" }}
           className="grid grid-cols-1 sm:grid-cols-3 gap-5 lg:gap-7 items-end"
         >
-          {librarians.map((lib) => {
+          {sorted.map((lib) => {
             const cfg = rankConfig[lib.rank];
             const isFirst = lib.rank === 1;
 
@@ -159,20 +125,18 @@ export default function TopLibrarians() {
                 whileHover={{ y: -6, transition: { duration: 0.25, ease: "easeOut" } }}
                 className={`
                   relative flex flex-col items-center text-center rounded-2xl border
-                  px-6 py-8 ${cfg.cardBg} ${cfg.cardBorder} ${cfg.scale}
-                  shadow-sm hover:shadow-md transition-shadow duration-300
+                  px-6 py-8 ${cfg.cardBg} ${cfg.cardBorder}
+                  ${isFirst ? "scale-105 shadow-md" : "shadow-sm"}
+                  hover:shadow-md transition-shadow duration-300
                 `}
                 style={{ borderWidth: isFirst ? "1.5px" : "1px" }}
               >
-                {/* Rank badge — top right */}
-                <span
-                  className="absolute top-4 right-4 text-xl select-none"
-                  aria-label={`Rank ${lib.rank}`}
-                >
+                {/* Rank badge */}
+                <span className="absolute top-4 right-4 text-xl select-none" aria-label={`Rank ${lib.rank}`}>
                   {lib.badge}
                 </span>
 
-                {/* Delivery count pill — top left */}
+                {/* Delivery count pill */}
                 <motion.span
                   initial={{ opacity: 0, x: -12 }}
                   whileInView={{ opacity: 1, x: 0 }}
@@ -188,18 +152,22 @@ export default function TopLibrarians() {
                 {/* Avatar */}
                 <motion.div
                   {...(isFirst ? pulseRing : {})}
-                  className={`${cfg.avatarSize} rounded-full overflow-hidden mt-4 mb-4 shrink-0`}
+                  className={`${cfg.avatarSize} rounded-full overflow-hidden mt-4 mb-4 shrink-0 bg-slate-100 dark:bg-slate-800 flex items-center justify-center`}
                   style={{
                     outline: `${cfg.ringWidth} solid ${cfg.ringColor}`,
                     outlineOffset: "3px",
                   }}
                 >
-                  <img
-                    src={lib.avatar}
-                    alt={lib.name}
-                    className="w-full h-full object-cover"
-                    draggable={false}
-                  />
+                  {lib.avatar ? (
+                    <img
+                      src={lib.avatar}
+                      alt={lib.name}
+                      className="w-full h-full object-cover"
+                      draggable={false}
+                    />
+                  ) : (
+                    <TbUser className="w-1/2 h-1/2 text-slate-400 dark:text-slate-500" />
+                  )}
                 </motion.div>
 
                 {/* Name */}
@@ -252,16 +220,16 @@ export default function TopLibrarians() {
                   </div>
                 </div>
 
-                {/* Progress bar — deliveries relative to #1 */}
+                {/* Progress bar */}
                 <div className="w-full mt-4">
                   <div className="flex justify-between text-[10px] font-semibold text-slate-400 dark:text-slate-500 mb-1.5 uppercase tracking-wider">
                     <span>Delivery progress</span>
-                    <span>{Math.round((lib.deliveries / 312) * 100)}%</span>
+                    <span>{Math.round((lib.deliveries / maxDeliveries) * 100)}%</span>
                   </div>
                   <div className="w-full h-1.5 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
                     <motion.div
                       initial={{ width: 0 }}
-                      whileInView={{ width: `${(lib.deliveries / 312) * 100}%` }}
+                      whileInView={{ width: `${(lib.deliveries / maxDeliveries) * 100}%` }}
                       viewport={{ once: true }}
                       transition={{
                         duration: 1.1,
@@ -279,7 +247,7 @@ export default function TopLibrarians() {
           })}
         </motion.div>
 
-        {/* Footer CTA */}
+        {/* Footer */}
         <motion.div
           initial={{ opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}

@@ -42,9 +42,8 @@ const librarianNavItems = [
 
 const adminNavItems = [
   { label: "Overview", href: "/dashboard/admin", icon: MdAdminPanelSettings },
-  { label: "Approve Books", href: "/dashboard/admin/books", icon: MdMenuBook },
-  { label: "Manage All Books", href: "/dashboard/admin/books", icon: MdMenuBook },
-  { label: "Manage Users", href: "/dashboard/admin/users", icon: MdPeople },
+  { label: "Manage All Books", href: "/dashboard/admin/manage-books", icon: MdMenuBook },
+  { label: "Manage Users", href: "/dashboard/admin/manage-users", icon: MdPeople },
   { label: "Transactions", href: "/dashboard/admin/transactions", icon: MdReceiptLong },
   { label: "Profile", href: "/dashboard/profile", icon: MdPerson },
 ];

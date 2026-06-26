@@ -107,7 +107,7 @@ const LibrarianPage = async () => {
           </div>
           <div className="relative z-10 w-12 h-12 rounded-full bg-white/20 border-2 overflow-hidden border-white/40 flex items-center justify-center text-white font-bold text-sm shrink-0">
             {user?.image
-              ? <Image src={user.image} alt="avatar" width={50} height={50} className="rounded-full" />
+              ? <Image src={user.image} alt="avatar" width={50} height={50} className="rounded-full object-cover h-full" />
               : user?.name?.slice(0, 2).toUpperCase() || 'LB'}
           </div>
         </div>

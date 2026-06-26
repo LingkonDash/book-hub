@@ -1,10 +1,8 @@
 'use client';
 
-import { useState, useEffect, useTransition, useCallback, useRef } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import BookCard from '../shared/BookCard';
-import { toast } from 'react-toastify';
-import { getBooks } from '@/lib/api/getBooks';
+import { useTransition } from 'react';
 
 const LIMIT = 12;
 
@@ -42,7 +40,6 @@ function PageBtn({ children, active, disabled, onClick }) {
 }
 
 // ── Page number range builder ──────────────────────────────
-// Always shows: first, last, current ± 1, with "…" gaps
 function buildPageRange(current, total) {
   if (total <= 7) return Array.from({ length: total }, (_, i) => i + 1);
 
@@ -57,67 +54,29 @@ function buildPageRange(current, total) {
   return result;
 }
 
-export default function BooksBody({ getData, initialData }) {
+export default function BooksBody({ initialData }) {
   const searchParams = useSearchParams();
   const router = useRouter();
-
-  const [books, setBooks] = useState(initialData.books ?? []);
-  const [totalCount, setTotalCount] = useState(initialData.total ?? 0);
   const [isPending, startTransition] = useTransition();
 
-  // If SSR gave us data, mark first load as "already done" so we skip the mount fetch
-  const [firstLoad, setFirstLoad] = useState(
-    !(initialData?.books?.length > 0)
-  );
+  // Extract directly from server-driven initialData props
+  const books = initialData?.books ?? [];
+  const totalCount = initialData?.total ?? 0;
+  const totalPages = initialData?.totalPages ?? Math.ceil(totalCount / LIMIT);
+  const page = initialData?.page ?? Math.max(1, parseInt(searchParams.get('page') || '1', 10));
 
-  const isFirstRender = useRef(true);
-  // Read params
-  const q = searchParams.get('q') || '';
   const category = searchParams.get('category') || '';
-  const sort = searchParams.get('sort') || 'latest';
-  const page = Math.max(1, parseInt(searchParams.get('page') || '1', 10));
-
-  const totalPages = Math.ceil(totalCount / LIMIT);
-
-  // ── Fetch ────────────────────────────────────────────────
-
-  const fetchBooks = useCallback(() => {
-    startTransition(async () => {
-      try {
-        const result = await getBooks(
-          `page=${page || 1}&limit=${LIMIT}&${category ? `category=${category}&` : ''}${sort ? `sort=${sort}&` : ''}${q ? `search=${q}` : ''}`
-        );
-        setBooks(result?.books ?? []);
-        setTotalCount(result?.total ?? 0);
-      } catch (err) {
-        toast.error('Failed to fetch books:', err);
-        setBooks([]);
-        setTotalCount(0);
-      } finally {
-        setFirstLoad(false);
-      }
-    });
-  }, [q, category, sort, page, getData]);
-
-  useEffect(() => {
-    // On mount: if SSR already gave us fresh data, just clear the flag and bail
-    if (isFirstRender.current) {
-      isFirstRender.current = false;
-      if (initialData?.books?.length > 0) {
-        setFirstLoad(false);
-        return;          // ← skip the network call
-      }
-    }
-    fetchBooks();
-  }, [fetchBooks]);
-
 
   // ── Page navigation ──────────────────────────────────────
   const goToPage = (p) => {
     const params = new URLSearchParams(searchParams.toString());
     params.set('page', String(p));
-    router.push(`?${params.toString()}`, { scroll: false });
-    // Smooth scroll back up to results
+    
+    // Wrapping router.push in startTransition triggers the skeleton UI while Next.js fetches data
+    startTransition(() => {
+      router.push(`?${params.toString()}`, { scroll: false });
+    });
+    
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -126,19 +85,15 @@ export default function BooksBody({ getData, initialData }) {
   const rangeEnd = Math.min(page * LIMIT, totalCount);
 
   const pageRange = buildPageRange(page, totalPages);
-
-  const isLoading = isPending || firstLoad;
-
-  // ── Empty state ──────────────────────────────────────────
-  const isEmpty = !isLoading && books.length === 0;
+  const isEmpty = !isPending && books.length === 0;
 
   return (
     <div className="w-full space-y-6">
 
       {/* ── Result count header ──────────────────────────── */}
       <div className="flex items-center justify-between min-h-[28px]">
-        {isLoading ? (
-          <div className="h-4 w-52 bg-black-100 rounded-full animate-pulse" />
+        {isPending ? (
+          <div className="h-4 w-52 bg-slate-200 dark:bg-slate-700 rounded-full animate-pulse" />
         ) : isEmpty ? (
           <p className="text-sm text-slate-400">No books found</p>
         ) : (
@@ -160,15 +115,15 @@ export default function BooksBody({ getData, initialData }) {
         )}
 
         {/* Active page indicator on the right */}
-        {!isLoading && totalPages > 1 && (
+        {!isPending && totalPages > 1 && (
           <p className="text-xs text-slate-400 font-medium">
             Page {page} of {totalPages}
           </p>
         )}
       </div>
 
-      {/* ── Book grid ────────────────────────────────────── */}
-      {isLoading ? (
+      {/* ── Book grid / Skeletons ─────────────────────────── */}
+      {isPending ? (
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
           {Array.from({ length: LIMIT }).map((_, i) => (
             <BookCardSkeleton key={i} />
@@ -191,7 +146,7 @@ export default function BooksBody({ getData, initialData }) {
       )}
 
       {/* ── Pagination ───────────────────────────────────── */}
-      {!isLoading && totalPages > 1 && (
+      {!isPending && totalPages > 1 && (
         <div className="flex items-center justify-center gap-1 pt-2 flex-wrap">
 
           {/* Prev */}

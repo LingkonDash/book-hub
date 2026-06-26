@@ -357,7 +357,7 @@ export default function BestSeller({ featuredBooks }) {
                         </span>
                       </div>
 
-                      <div onClick={() => console.log('button clicked!')}>
+                      <div>
                         <Link
                           href={`/browse/${book._id}`}
                           className="inline-flex items-center justify-center gap-1.5 px-4 py-2 bg-primary hover:bg-primary/90 text-white text-xs font-bold rounded-xl transition-colors duration-150 shadow-sm shadow-primary/10"

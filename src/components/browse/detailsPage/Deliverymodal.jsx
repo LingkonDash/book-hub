@@ -5,16 +5,6 @@ import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { toast } from 'react-toastify';
 
-// ── small UI atoms ─────────────────────────────────────────
-function Spinner() {
-  return (
-    <svg className="animate-spin w-4 h-4" viewBox="0 0 24 24" fill="none">
-      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/>
-      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"/>
-    </svg>
-  );
-}
-
 function Input({ label, id, error, ...props }) {
   return (
     <div className="flex flex-col gap-1">
@@ -180,48 +170,6 @@ function StepConfirm({ book, address, setAddress, errors, onClose }) {
   );
 }
 
-function StepPaying({ onClose }) {
-  return (
-    <div className="flex flex-col items-center justify-center gap-4 px-6 py-14 text-center">
-      <div className="w-14 h-14 rounded-full bg-[#fff0ee] flex items-center justify-center">
-        <Spinner />
-      </div>
-      <div>
-        <p className="font-bold text-slate-800">Redirecting to payment…</p>
-        <p className="text-sm text-slate-400 mt-1">Please do not close this window.</p>
-      </div>
-      <button onClick={onClose} className="text-xs text-slate-400 hover:text-slate-600 underline underline-offset-2 mt-2">
-        Cancel
-      </button>
-    </div>
-  );
-}
-
-function StepSuccess({ book, onClose }) {
-  return (
-    <div className="flex flex-col items-center justify-center gap-4 px-6 py-14 text-center">
-      <div className="w-16 h-16 rounded-full bg-emerald-50 border-2 border-emerald-200 flex items-center justify-center">
-        <svg className="w-8 h-8 text-emerald-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-          <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7"/>
-        </svg>
-      </div>
-      <div>
-        <p className="text-xl font-bold text-slate-900">Delivery requested!</p>
-        <p className="text-sm text-slate-500 mt-1 max-w-xs">
-          Your request for <span className="font-semibold text-slate-700">{book.title}</span> has been placed.
-          A librarian will dispatch it soon.
-        </p>
-      </div>
-      <button
-        onClick={onClose}
-        className="mt-2 px-6 h-11 rounded-xl bg-slate-900 hover:bg-slate-700 text-white text-sm font-semibold transition-colors cursor-pointer"
-      >
-        Got it
-      </button>
-    </div>
-  );
-}
-
 // ── Validate address ───────────────────────────────────────
 function validate(address) {
   const errors = {};
@@ -256,6 +204,10 @@ export default function DeliveryModal({ book, currentUser }) {
     }
     if (!book.available) {
       toast.error('This book is currently unavailable.');
+      return;
+    }
+    if(currentUser?.id === book.librarianId) {
+      toast.info('you cant book your own books!');
       return;
     }
     setErrors({});

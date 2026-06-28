@@ -4,7 +4,7 @@
 
 ![BookHub Banner](https://i.ibb.co.com/v6Jf66L7/Screenshot-2026-06-26-230829.png)
 
-[![Live Demo](https://img.shields.io/badge/🌐_Live_Demo-BiblioDropp-fc4a32?style=for-the-badge)](https://book-hub-liart.vercel.app)
+[![Live Demo](https://img.shields.io/badge/🌐_Live_Demo-BookHub-fc4a32?style=for-the-badge)](https://book-hub-liart.vercel.app)
 [![Client Repo](https://img.shields.io/badge/GitHub-Client_Repo-181717?style=for-the-badge&logo=github)](https://github.com/LingkonDash/book-hub)
 [![Server Repo](https://img.shields.io/badge/GitHub-Server_Repo-181717?style=for-the-badge&logo=github)](https://github.com/LingkonDash/book-hub-server)
 

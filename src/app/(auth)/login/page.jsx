@@ -63,8 +63,6 @@ export default function LoginPage() {
         return;
       }
 
-      console.log(data);
-
       // Step 3: Role-based redirect
       const userRole = data?.user?.userRole || "user";
       

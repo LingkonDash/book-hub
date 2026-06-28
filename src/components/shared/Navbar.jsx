@@ -18,12 +18,9 @@ export default function Navbar({ session }) {
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState(null);
 
-  // --- Scroll & Mouse tracking states ---
   const [isVisible, setIsVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
 
-
-  // Adjusted paths for proper active routing state checks
   const navItems = [
     { name: 'Home', hasDropdown: false, path: '/' },
     { name: 'Browse Books', hasDropdown: true, path: '/browse' },
@@ -39,32 +36,27 @@ export default function Navbar({ session }) {
 
   const handleLogout = async () => {
     const data = await authClient.signOut();
-    
     if (!data?.success) {
-      toast.success('Signout Successful!')
+      toast.success('Signout Successful!');
       router.push('/login');
     } else {
-      toast.success('Something went wrong, try again')
+      toast.success('Something went wrong, try again');
     }
   };
 
-  // --- Scroll + Mouse Upward Event Listeners ---
   useEffect(() => {
     const controlNavbar = () => {
       if (typeof window !== 'undefined') {
-        // If user scrolls down past 10px and is moving downwards, hide it
         if (window.scrollY > lastScrollY && window.scrollY > 10) {
           setIsVisible(false);
-          setIsProfileOpen(false); // Close active profile dropdowns on hide
+          setIsProfileOpen(false);
         } else {
-          // If user scrolls upwards, show it immediately
           setIsVisible(true);
         }
         setLastScrollY(window.scrollY);
       }
     };
 
-    // Make navbar visible if the mouse moves close to the top of the viewport (UX improvement)
     const handleMouseMove = (e) => {
       if (e.clientY <= 45) {
         setIsVisible(true);
@@ -109,15 +101,12 @@ export default function Navbar({ session }) {
                 >
                   <Link
                     href={item.path}
-                    className={`flex items-center text-base font-bold gap-1 relative pb-3 transition-opacity duration-200 ${isActive ? 'opacity-100' : 'opacity-80 hover:opacity-100'
-                      }`}
+                    className={`flex items-center text-base font-bold gap-1 relative pb-3 transition-opacity duration-200 ${isActive ? 'opacity-100' : 'opacity-80 hover:opacity-100'}`}
                   >
                     <span>{item.name}</span>
                     {item.hasDropdown && (
                       <FiChevronDown className={`text-sm transition-transform absolute bottom-1/2 -right-5 duration-200 ${activeDropdown === index ? 'rotate-180' : ''}`} />
                     )}
-
-                    {/* Active Route indicator dot dropping from behind text to underneath */}
                     {isActive && (
                       <motion.div
                         layoutId="activeUnderline"
@@ -135,7 +124,6 @@ export default function Navbar({ session }) {
                     )}
                   </Link>
 
-                  {/* Animated Sub-navigation Dropdowns */}
                   <AnimatePresence>
                     {item.hasDropdown && activeDropdown === index && (
                       <motion.div
@@ -143,10 +131,8 @@ export default function Navbar({ session }) {
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: 15 }}
                         transition={{ duration: 0.2, ease: "easeOut" }}
-                        className={`absolute left-1/2 -translate-x-1/2 mt-2 bg-white text-slate-800 rounded-2xl shadow-2xl border border-slate-100 p-4 z-50 ${item.name === 'Browse Books' ? 'w-120' : item.name === 'Contact' ? 'w-90' : 'w-48'
-                          }`}
+                        className={`absolute left-1/2 -translate-x-1/2 mt-2 bg-white text-slate-800 rounded-2xl shadow-2xl border border-slate-100 p-4 z-50 ${item.name === 'Browse Books' ? 'w-120' : item.name === 'Contact' ? 'w-90' : 'w-48'}`}
                       >
-                        {/* BROWSE BOOKS CUSTOM POPUP ACCORDING TO USER REQUIREMENT */}
                         {item.name === 'Browse Books' && (
                           <div className="grid grid-cols-2 gap-4">
                             <div>
@@ -182,7 +168,6 @@ export default function Navbar({ session }) {
                           </div>
                         )}
 
-                        {/* CONTACT FIELD CUSTOM POPUP ACCORDING TO USER REQUIREMENT */}
                         {item.name === 'Contact' && (
                           <div className="space-y-2">
                             <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Get In Touch</p>
@@ -210,7 +195,6 @@ export default function Navbar({ session }) {
                           </div>
                         )}
 
-                        {/* DEFAULT BACKUP LAYOUT FALLBACK FOR OTHER CHOSEN DROPDOWNS (E.G. ABOUT US) */}
                         {item.name !== 'Browse Books' && item.name !== 'Contact' && (
                           <div className="space-y-1">
                             <Link href="/#howItWorks" className="block px-4 py-2 text-sm font-semibold rounded-lg hover:bg-slate-50 text-slate-700 transition-colors">
@@ -231,10 +215,10 @@ export default function Navbar({ session }) {
 
           <div className='flex justify-center items-center gap-4'>
 
-            {/* 3. Actions / User Profile Section */}
-            <div className="hidden md:flex items-center gap-6">
+            {/* 3. Actions / User Profile Section (Desktop) */}
+            <div className="hidden md:flex items-center gap-3">
               {session?.user ? (
-                /* User Profile Dynamic Pop-up (Logged In)  */
+                /* User Profile Dynamic Pop-up (Logged In) */
                 <div className="relative">
                   <button
                     onClick={() => setIsProfileOpen(!isProfileOpen)}
@@ -258,7 +242,6 @@ export default function Navbar({ session }) {
                     <FiChevronDown className={`text-sm transition-transform duration-200 ${isProfileOpen ? 'rotate-180' : ''}`} />
                   </button>
 
-                  {/* Animated Profile Dropdown div  */}
                   <AnimatePresence>
                     {isProfileOpen && (
                       <motion.div
@@ -303,13 +286,21 @@ export default function Navbar({ session }) {
                   </AnimatePresence>
                 </div>
               ) : (
-                /* Register Button (Logged Out)  */
-                <Link
-                  href="/login"
-                  className="px-5 py-2.5 bg-white text-primary text-sm font-bold rounded-xl shadow-md hover:bg-opacity-90 transition-all duration-200 hover:-translate-y-0.5 active:translate-y-0"
-                >
-                  Login
-                </Link>
+                /* Login + Register Buttons (Logged Out — Desktop) */
+                <div className="flex items-center gap-2">
+                  <Link
+                    href="/login"
+                    className="px-5 py-2.5 bg-white/15 border border-white/30 text-white text-sm font-bold rounded-xl hover:bg-white/25 transition-all duration-200 hover:-translate-y-0.5 active:translate-y-0"
+                  >
+                    Login
+                  </Link>
+                  <Link
+                    href="/register"
+                    className="px-5 py-2.5 bg-white text-primary text-sm font-bold rounded-xl shadow-md hover:bg-opacity-90 transition-all duration-200 hover:-translate-y-0.5 active:translate-y-0"
+                  >
+                    Register
+                  </Link>
+                </div>
               )}
             </div>
 
@@ -333,16 +324,18 @@ export default function Navbar({ session }) {
                 initial={{ opacity: 0, height: 0 }}
                 animate={{ opacity: 1, height: 'auto' }}
                 exit={{ opacity: 0, height: 0 }}
+                transition={{ duration: 0.3, ease: "easeInOut" }}
                 className="lg:hidden absolute top-full left-0 w-full bg-primary border-t border-white/10 overflow-hidden shadow-xl"
               >
                 <div className="px-6 pt-3 pb-6 space-y-3">
+                  {/* Nav Links */}
                   {navItems.map((item, index) => {
                     const isActive = pathname === item.path;
                     return (
                       <div key={index}>
                         <Link
                           href={item.path}
-                          onClick={() => !item.hasDropdown && setIsMobileMenuOpen(false)}
+                          onClick={() => setIsMobileMenuOpen(false)}
                           className={`block py-2 text-base font-bold transition-opacity ${isActive ? 'opacity-100 underline underline-offset-4' : 'opacity-90 hover:opacity-100'}`}
                         >
                           {item.name}
@@ -351,21 +344,34 @@ export default function Navbar({ session }) {
                     );
                   })}
 
-                  <hr className="border-white/10 my-2" />
+                  {/* Divider — auth section slides from here */}
+                  <motion.hr
+                    initial={{ scaleX: 0, opacity: 0 }}
+                    animate={{ scaleX: 1, opacity: 1 }}
+                    transition={{ duration: 0.3, delay: 0.15, ease: "easeOut" }}
+                    className="border-white/20 my-2 origin-left"
+                  />
 
-                  {session ? (
-                    <div className="space-y-2 pt-1">
+                  {/* Auth Section — slides down from the divider */}
+                  {session?.user ? (
+                    /* Logged In: Dashboard, Profile, Sign Out */
+                    <motion.div
+                      initial={{ opacity: 0, y: -12 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.25, delay: 0.2, ease: "easeOut" }}
+                      className="space-y-1 pt-1"
+                    >
                       <Link
                         href={getDashboardPath(session?.user?.userRole)}
                         onClick={() => setIsMobileMenuOpen(false)}
-                        className="flex items-center gap-2 py-2 text-base font-bold opacity-90 hover:opacity-100"
+                        className="flex items-center gap-2 py-2 text-base font-bold opacity-90 hover:opacity-100 transition-opacity"
                       >
                         <FiGrid /> Dashboard
                       </Link>
                       <Link
                         href="/dashboard/profile"
                         onClick={() => setIsMobileMenuOpen(false)}
-                        className="flex items-center gap-2 py-2 text-base font-bold opacity-90 hover:opacity-100"
+                        className="flex items-center gap-2 py-2 text-base font-bold opacity-90 hover:opacity-100 transition-opacity"
                       >
                         <FiUser /> Profile
                       </Link>
@@ -374,26 +380,40 @@ export default function Navbar({ session }) {
                           setIsMobileMenuOpen(false);
                           handleLogout();
                         }}
-                        className="w-full flex items-center gap-2 py-2 text-base font-bold text-rose-300 text-left"
+                        className="w-full flex items-center gap-2 py-2 text-base font-bold text-rose-300 text-left hover:text-rose-200 transition-colors"
                       >
                         <FiLogOut /> Sign Out
                       </button>
-                    </div>
+                    </motion.div>
                   ) : (
-                    <div className="pt-2">
+                    /* Logged Out: Login + Register buttons */
+                    <motion.div
+                      initial={{ opacity: 0, y: -12 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.25, delay: 0.2, ease: "easeOut" }}
+                      className="pt-1 flex flex-col gap-3"
+                    >
                       <Link
                         href="/login"
                         onClick={() => setIsMobileMenuOpen(false)}
-                        className="block text-center w-full px-5 py-3 bg-white text-primary font-bold rounded-xl shadow-md"
+                        className="block text-center w-full px-5 py-3 bg-white/15 border border-white/30 text-white font-bold rounded-xl hover:bg-white/25 transition-colors"
                       >
                         Login
                       </Link>
-                    </div>
+                      <Link
+                        href="/register"
+                        onClick={() => setIsMobileMenuOpen(false)}
+                        className="block text-center w-full px-5 py-3 bg-white text-primary font-bold rounded-xl shadow-md hover:bg-opacity-90 transition-colors"
+                      >
+                        Register
+                      </Link>
+                    </motion.div>
                   )}
                 </div>
               </motion.div>
             )}
           </AnimatePresence>
+
         </div>
       </nav>
     </motion.div>

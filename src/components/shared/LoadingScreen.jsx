@@ -1,24 +1,11 @@
-// components/shared/LoadingScreen.jsx
-'use client';
-
-import { useEffect, useState } from 'react';
 import { BiBookOpen } from 'react-icons/bi';
 
 export default function LoadingScreen() {
-  const [visible, setVisible] = useState(true);
-
-  useEffect(() => {
-    // Page is ready — wait 500ms before unmounting
-    const timer = setTimeout(() => setVisible(false), 500);
-    return () => clearTimeout(timer);
-  }, []);
-
-  if (!visible) return null;
 
   return (
     <div
       className={`fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-white
-                  transition-opacity duration-300 ${visible ? 'opacity-100' : 'opacity-0'}`}
+                  transition-opacity duration-300`}
     >
 
       {/* ── Logo mark ─────────────────────────────────────────── */}
